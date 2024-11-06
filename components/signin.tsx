@@ -71,7 +71,7 @@ export default function Signin() {
 
                 <div className="flex flex-row " >
                   <Label htmlFor="password">Password</Label>
-                  <Label htmlFor="forgot" className='ml-48 '>Forgot?</Label>
+                  <Label htmlFor="forgot" className='ml-56 '>Forgot?</Label>
                 </div>
                 <div className="relative">
                   <Input
