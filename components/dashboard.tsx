@@ -35,6 +35,11 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 export function Dashboardui() {
   const [groupBy, setGroupBy] = useState('Cloud provider')
+
+  // Function to handle change in dropdown
+  const handleGroupByChange = (value: string) => {
+    setGroupBy(value)
+  }
   const [timeRange, setTimeRange] = useState('Last 6 months')
   const [viewType, setViewType] = useState('Monthly')
 
@@ -64,6 +69,13 @@ export function Dashboardui() {
     { name: 'OVH', value: 100, color: '#123F6D' },
     { name: 'Google Cloud Platform', value: 150, color: '#4285F4' },
     { name: 'DigitalOcean', value: 100, color: '#0080FF' },
+  ]
+  const regionData = [
+    { name: 'North America West', value: 250, color: '#FF9900' },
+    { name: 'North America East', value: 200, color: '#00A4EF' },
+    { name: 'Europe West', value: 150, color: '#123F6D' },
+    { name: 'Asia East', value: 120, color: '#4285F4' },
+    { name: 'Asia Pacific', value: 180, color: '#0080FF' },
   ]
 
   return (
@@ -214,49 +226,56 @@ export function Dashboardui() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="mb-4 flex items-center gap-4">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline">
-                      Group by: {groupBy}
-                      <ChevronDown className="ml-2 h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <DropdownMenuItem onClick={() => setGroupBy('Cloud provider')}>
-                      Cloud provider
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setGroupBy('Region')}>
-                      Region
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-                <Input placeholder="Search resources..." className="max-w-xs" />
-              </div>
-              <div className="h-[300px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={resourcesData}
-                      dataKey="value"
-                      nameKey="name"
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={60}
-                      outerRadius={80}
-                    >
-                      {resourcesData.map((entry, index) => (
+            <div className="mb-4 flex items-center gap-4">
+            {/* Group by Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline">
+                  Group by: {groupBy}
+                  <ChevronDown className="ml-2 h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem onClick={() => handleGroupByChange('Cloud provider')}>
+                  Cloud provider
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleGroupByChange('Region')}>
+                  Region
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <Input placeholder="Search resources..." className="max-w-xs" />
+          </div>
+
+          {/* Chart Rendering */}
+          <div className="h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={groupBy === 'Cloud provider' ? resourcesData : regionData}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={60}
+                  outerRadius={80}
+                >
+                  {groupBy === 'Cloud provider'
+                    ? resourcesData.map((entry, index) => (
+                        <Cell key={index} fill={entry.color} />
+                      ))
+                    : regionData.map((entry, index) => (
                         <Cell key={index} fill={entry.color} />
                       ))}
-                    </Pie>
-                    <Tooltip />
-                    <Legend />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+                </Pie>
+                <Tooltip />
+                <Legend />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
         <Card>
           <CardHeader>
             <CardTitle>Cost explorer</CardTitle>
