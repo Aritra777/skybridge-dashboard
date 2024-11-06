@@ -1,6 +1,6 @@
 'use client'
 
-import { Github } from 'lucide-react'
+import { Eye, EyeOff, Github } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -16,8 +16,10 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
+import { useState } from 'react'
 
 export default function Component() {
+  const [showPassword, setShowPassword] = useState(false);
   return (
     <div className="min-h-screen w-full">
       <header className="flex h-16 items-center justify-between px-6 border-b">
@@ -39,7 +41,7 @@ export default function Component() {
         <div className="hidden w-1/2 bg-muted/50 lg:block">
           <div className="flex h-full flex-col justify-center px-12">
             <figure className="space-y-6">
-              <blockquote className="text-2xl font-medium leading-normal">
+              <blockquote className="text-2xl font-medium leading-normal italic">
                 "The cloud-agnostic tool provides unified resource management, optimizing multi-cloud costs and efficiency through usage analysis and smart recommendations."
               </blockquote>
               <figcaption className="text-lg font-semibold">
@@ -68,14 +70,27 @@ export default function Component() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  required
-                  type="password"
-                />
+                <div className="relative">
+                  <Input
+                    id="password"
+                    required
+                    type={showPassword ? 'text' : 'password'}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-5 w-5" />
+                    ) : (
+                      <Eye className="h-5 w-5" />
+                    )}
+                  </button>
+                </div>
               </div>
               <Button className="w-full" type="submit">
-                Sign up with Email
+                Sign up
               </Button>
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">

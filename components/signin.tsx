@@ -42,7 +42,7 @@ export default function Signin() {
         <div className="hidden w-1/2 bg-muted/50 lg:block">
           <div className="flex h-full flex-col justify-center px-12">
             <figure className="space-y-6">
-              <blockquote className="text-2xl font-medium leading-normal">
+              <blockquote className="text-2xl font-medium leading-normal italic">
                 "We are here to simplify your multi-cloud management with unified resources, optimized costs, and smart recommendations for efficient, insightful, cost-effective operations."
               </blockquote>
               <figcaption className="text-lg font-semibold">
@@ -68,7 +68,11 @@ export default function Signin() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
+
+                <div className="flex flex-row " >
+                  <Label htmlFor="password">Password</Label>
+                  <Label htmlFor="forgot" className='ml-48 '>Forgot?</Label>
+                </div>
                 <div className="relative">
                   <Input
                     id="password"
@@ -87,9 +91,10 @@ export default function Signin() {
                     )}
                   </button>
                 </div>
+
               </div>
               <Button className="w-full" type="submit">
-                Sign in with Email
+                Sign in
               </Button>
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
