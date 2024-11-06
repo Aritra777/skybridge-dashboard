@@ -69,9 +69,10 @@ export default function Signin() {
               </div>
               <div className="space-y-2">
 
-                <div className="flex flex-row " >
+                <div className="flex flex-row justify-between items-center" >
                   <Label htmlFor="password">Password</Label>
-                  <Label htmlFor="forgot" className='ml-56 '>Forgot?</Label>
+                  <Label htmlFor="forgot" className='text-sm '>Forgot?</Label>
+
                 </div>
                 <div className="relative">
                   <Input
