@@ -1,5 +1,5 @@
 'use client'
-
+import Image from 'next/image'
 import { Bell, ChevronDown, Globe, HelpCircle, Package } from 'lucide-react'
 import { useState } from 'react'
 import {
@@ -32,7 +32,8 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
-
+import cimage from '../components/image/SkyBridge.svg'
+//import colimage from '../components/image/favicon.ico'
 export function Dashboardui() {
   const [groupBy, setGroupBy] = useState('Cloud provider')
 
@@ -81,7 +82,12 @@ export function Dashboardui() {
   return (
     <div className="flex min-h-screen flex-col">
       <header className="flex h-14 items-center gap-4 border-b bg-background px-6">
-        <Globe className="h-6 w-6" />
+      <Image
+        src={cimage}
+        width={40}
+        height={40}
+        alt="Picture of the author"
+      />
         <nav className="flex gap-4">
           <Button variant="ghost" className="font-semibold">
             SkyBridge

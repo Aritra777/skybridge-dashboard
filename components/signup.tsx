@@ -17,17 +17,23 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { useState } from 'react'
-
+import climit from '../components/image/SkyBridge.svg'
 export default function Component() {
   const [showPassword, setShowPassword] = useState(false);
   return (
     <div className="min-h-screen w-full">
       <header className="flex h-16 items-center justify-between px-6 border-b">
         <Link href="/" className="flex items-center gap-2">
-          <div className="flex h-6 w-6 items-center justify-center rounded-lg border">
+          {/* <div className="flex h-6 w-6 items-center justify-center rounded-lg border">
             <span className="sr-only"></span>
             A
-          </div>
+          </div> */}
+              <Image
+        src={climit}
+        width={40}
+        height={40}
+        alt="Picture of the author"
+      />
           <span className="text-lg font-semibold"></span>
         </Link>
         <Link
