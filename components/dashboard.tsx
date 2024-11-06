@@ -38,55 +38,24 @@ export function Dashboardui() {
   const [timeRange, setTimeRange] = useState('Last 6 months')
   const [viewType, setViewType] = useState('Monthly')
 
-  const costData = [
-    {
-      month: 'Jan',
-      Sandbox: 70,
-      Production: 40,
-      AWS: 10,
-      QA: 35,
-      'Cost 50+': 25,
-    },
-    {
-      month: 'Feb',
-      Sandbox: 20,
-      Production: 20,
-      AWS: 20,
-      QA: 20,
-      'Cost 50+': 15,
-    },
-    {
-      month: 'Mar',
-      Sandbox: 15,
-      Production: 25,
-      AWS: 25,
-      QA: 25,
-      'Cost 50+': 20,
-    },
-    {
-      month: 'Apr',
-      Sandbox: 35,
-      Production: 15,
-      AWS: 30,
-      QA: 20,
-      'Cost 50+': 35,
-    },
-    {
-      month: 'May',
-      Sandbox: 25,
-      Production: 35,
-      AWS: 10,
-      QA: 30,
-      'Cost 50+': 15,
-    },
-    {
-      month: 'Jun',
-      Sandbox: 45,
-      Production: 15,
-      AWS: 35,
-      QA: 25,
-      'Cost 50+': 10,
-    },
+  const sixMonthCostData = [
+    { month: 'Jan', Sandbox: 70, Production: 40, AWS: 10, QA: 35, 'Cost 50+': 25 },
+    { month: 'Feb', Sandbox: 20, Production: 20, AWS: 20, QA: 20, 'Cost 50+': 15 },
+    { month: 'Mar', Sandbox: 15, Production: 25, AWS: 25, QA: 25, 'Cost 50+': 20 },
+    { month: 'Apr', Sandbox: 35, Production: 15, AWS: 30, QA: 20, 'Cost 50+': 35 },
+    { month: 'May', Sandbox: 25, Production: 35, AWS: 10, QA: 30, 'Cost 50+': 15 },
+    { month: 'Jun', Sandbox: 45, Production: 15, AWS: 35, QA: 25, 'Cost 50+': 10 },
+  ]
+
+  const yearCostData = [
+    // Extend to 12 months for "Last year" data
+    ...sixMonthCostData,
+    { month: 'Jul', Sandbox: 30, Production: 20, AWS: 15, QA: 40, 'Cost 50+': 20 },
+    { month: 'Aug', Sandbox: 50, Production: 10, AWS: 25, QA: 15, 'Cost 50+': 25 },
+    { month: 'Sep', Sandbox: 35, Production: 25, AWS: 30, QA: 20, 'Cost 50+': 30 },
+    { month: 'Oct', Sandbox: 40, Production: 30, AWS: 20, QA: 35, 'Cost 50+': 20 },
+    { month: 'Nov', Sandbox: 25, Production: 20, AWS: 25, QA: 30, 'Cost 50+': 25 },
+    { month: 'Dec', Sandbox: 30, Production: 40, AWS: 15, QA: 20, 'Cost 50+': 35 },
   ]
 
   const resourcesData = [
@@ -321,9 +290,7 @@ export function Dashboardui() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                  <DropdownMenuItem
-                    onClick={() => setTimeRange('Last 6 months')}
-                  >
+                  <DropdownMenuItem onClick={() => setTimeRange('Last 6 months')}>
                     Last 6 months
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => setTimeRange('Last year')}>
@@ -346,7 +313,7 @@ export function Dashboardui() {
             </div>
             <div className="h-[400px]">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={costData}>
+                <BarChart data={timeRange === 'Last 6 months' ? sixMonthCostData : yearCostData}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="month" />
                   <YAxis />
