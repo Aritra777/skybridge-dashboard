@@ -17,7 +17,6 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { useState } from 'react'
-import climit from '../components/image/SkyBridge.svg'
 export default function Component() {
   const [showPassword, setShowPassword] = useState(false);
   return (
@@ -28,12 +27,12 @@ export default function Component() {
             <span className="sr-only"></span>
             A
           </div> */}
-              <Image
-        src={climit}
-        width={40}
-        height={40}
-        alt="Picture of the author"
-      />
+          <Image
+            src={"/image/SkyBridge.svg"}
+            width={40}
+            height={40}
+            alt="Picture of the author"
+          />
           <span className="text-lg font-semibold"></span>
         </Link>
         <Link

@@ -32,7 +32,6 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import cimage from '../components/image/SkyBridge.svg'
 //import colimage from '../components/image/favicon.ico'
 export function Dashboardui() {
   const [groupBy, setGroupBy] = useState('Cloud provider')
@@ -82,12 +81,12 @@ export function Dashboardui() {
   return (
     <div className="flex min-h-screen flex-col">
       <header className="flex h-14 items-center gap-4 border-b bg-background px-6">
-      <Image
-        src={cimage}
-        width={40}
-        height={40}
-        alt="Picture of the author"
-      />
+        <Image
+          src={"/image/SkyBridge.svg"}
+          width={40}
+          height={40}
+          alt="Picture of the author"
+        />
         <nav className="flex gap-4">
           <Button variant="ghost" className="font-semibold">
             SkyBridge
@@ -232,56 +231,56 @@ export function Dashboardui() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-            <div className="mb-4 flex items-center gap-4">
-            {/* Group by Dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline">
-                  Group by: {groupBy}
-                  <ChevronDown className="ml-2 h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuItem onClick={() => handleGroupByChange('Cloud provider')}>
-                  Cloud provider
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleGroupByChange('Region')}>
-                  Region
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            <Input placeholder="Search resources..." className="max-w-xs" />
-          </div>
+              <div className="mb-4 flex items-center gap-4">
+                {/* Group by Dropdown */}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline">
+                      Group by: {groupBy}
+                      <ChevronDown className="ml-2 h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem onClick={() => handleGroupByChange('Cloud provider')}>
+                      Cloud provider
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleGroupByChange('Region')}>
+                      Region
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+                <Input placeholder="Search resources..." className="max-w-xs" />
+              </div>
 
-          {/* Chart Rendering */}
-          <div className="h-[300px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={groupBy === 'Cloud provider' ? resourcesData : regionData}
-                  dataKey="value"
-                  nameKey="name"
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={60}
-                  outerRadius={80}
-                >
-                  {groupBy === 'Cloud provider'
-                    ? resourcesData.map((entry, index) => (
-                        <Cell key={index} fill={entry.color} />
-                      ))
-                    : regionData.map((entry, index) => (
-                        <Cell key={index} fill={entry.color} />
-                      ))}
-                </Pie>
-                <Tooltip />
-                <Legend />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+              {/* Chart Rendering */}
+              <div className="h-[300px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={groupBy === 'Cloud provider' ? resourcesData : regionData}
+                      dataKey="value"
+                      nameKey="name"
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={60}
+                      outerRadius={80}
+                    >
+                      {groupBy === 'Cloud provider'
+                        ? resourcesData.map((entry, index) => (
+                          <Cell key={index} fill={entry.color} />
+                        ))
+                        : regionData.map((entry, index) => (
+                          <Cell key={index} fill={entry.color} />
+                        ))}
+                    </Pie>
+                    <Tooltip />
+                    <Legend />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
         <Card>
           <CardHeader>
             <CardTitle>Cost explorer</CardTitle>
@@ -326,7 +325,7 @@ export function Dashboardui() {
               <Tabs
                 defaultValue="monthly"
                 className="ml-auto"
-                onValueChange={(value) =>
+                onValueChange={(value: string) =>
                   setViewType(value === 'monthly' ? 'Monthly' : 'Daily')
                 }
               >

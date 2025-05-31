@@ -17,7 +17,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
-import climit from '../components/image/SkyBridge.svg'
+// import climit from '../components/image/SkyBridge.svg'
 export default function Signin() {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -29,12 +29,12 @@ export default function Signin() {
             <span className="sr-only"></span>
             A
           </div> */}
-                        <Image
-        src={climit}
-        width={40}
-        height={40}
-        alt="Picture of the author"
-      />
+          <Image
+            src={'/image/SkyBridge.svg'}
+            width={40}
+            height={40}
+            alt="Picture of the author"
+          />
           <span className="text-lg font-semibold"></span>
         </Link>
         <Link
