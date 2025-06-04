@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client"
 
 import * as React from "react"
@@ -29,86 +30,82 @@ import {
 // This is sample data.
 const data = {
   user: {
-    name: "shadcn",
-    email: "m@example.com",
+    name: "Sauradip Ghosh",
+    email: "sauradip96ghosh@gmail.com",
     avatar: "/avatars/shadcn.jpg",
   },
   teams: [
     {
-      name: "Acme Inc",
+      name: "Sauradip AWS",
       logo: GalleryVerticalEnd,
       plan: "Enterprise",
     },
     {
-      name: "Acme Corp.",
+      name: "Sauradip GCP",
       logo: AudioWaveform,
       plan: "Startup",
     },
     {
-      name: "Evil Corp.",
+      name: "Sauradip Azure",
       logo: Command,
       plan: "Free",
     },
   ],
   navMain: [
     {
-      title: "Playground",
+      title: "Dashboard",
       url: "#",
       icon: SquareTerminal,
       isActive: true,
       items: [
         {
-          title: "History",
+          title: "Network",
           url: "#",
         },
         {
-          title: "Starred",
+          title: "Public",
           url: "#",
         },
         {
-          title: "Settings",
+          title: "Private",
           url: "#",
         },
       ],
     },
     {
-      title: "Models",
+      title: "Compute",
       url: "#",
       icon: Bot,
       items: [
         {
-          title: "Genesis",
+          title: "EC2",
           url: "#",
         },
         {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
+          title: "ECS",
           url: "#",
         },
       ],
     },
     {
-      title: "Documentation",
+      title: "Storage",
       url: "#",
       icon: BookOpen,
       items: [
         {
-          title: "Introduction",
+          title: "S3",
           url: "#",
         },
         {
-          title: "Get Started",
+          title: "EBS",
           url: "#",
         },
         {
-          title: "Tutorials",
+          title: "EFS",
           url: "#",
         },
         {
-          title: "Changelog",
+          title: "DynamoDB",
           url: "#",
         },
       ],
@@ -139,17 +136,12 @@ const data = {
   ],
   projects: [
     {
-      name: "Design Engineering",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "Sales & Marketing",
+      name: "Recommendations",
       url: "#",
       icon: PieChart,
     },
     {
-      name: "Travel",
+      name: "Compare",
       url: "#",
       icon: Map,
     },

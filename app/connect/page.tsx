@@ -170,7 +170,10 @@ import { Bell, HelpCircle } from "lucide-react";
 import Image from "next/image";
 
 const handleConnectCloud = () => {
-    console.log('Connecting to cloud...');
+     window.location.href = "/connect";
+};
+const handleDashboard = () => {
+     window.location.href = "/dashboard";
 };
 
 export default function Home() {
@@ -216,7 +219,7 @@ export default function Home() {
                   <SidebarTrigger className="-ml-1" />
                   <Separator orientation="vertical" className="mr-2 h-4" />
                   {/* Navbar component used  */}
-                  <Navbar handleConnectCloud={handleConnectCloud} />
+                  <Navbar handleConnectCloud={handleConnectCloud} handleDashboard={handleDashboard}/>
                </div>
             </header>
             {/* <Dashboardui /> */}

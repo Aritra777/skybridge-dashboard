@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 // components/Navbar.tsx
 'use client';
 
@@ -8,12 +9,14 @@ import { Bell, HelpCircle } from 'lucide-react';
 interface NavbarProps {
   handleConnectCloud: () => void;
 }
-
-export default function Navbar({ handleConnectCloud }: NavbarProps) {
+interface NavbarProps {
+  handleDashboard: () => void;
+}
+export default function Navbar({ handleConnectCloud,handleDashboard }: NavbarProps) {
   return (
     <header className="flex h-14 items-center border-b bg-background -ml-5 w-full justify-between px-6">
       <nav className="flex">
-        <Button variant="ghost" className="font-semibold" onClick={handleConnectCloud}>
+        <Button variant="ghost" className="font-semibold" onClick={handleDashboard}>
           SkyBridge
         </Button>
       </nav>
@@ -24,7 +27,7 @@ export default function Navbar({ handleConnectCloud }: NavbarProps) {
         <Button variant="ghost" size="icon">
           <HelpCircle className="h-4 w-4" />
         </Button>
-        <Button>☁️ Add Cloud</Button>
+        <Button onClick={handleConnectCloud}>☁️ Add Cloud</Button>
       </div>
     </header>
   );

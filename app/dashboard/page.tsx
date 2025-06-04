@@ -21,6 +21,10 @@ import { use } from 'react';
 
 const handleConnectCloud = () => {
       // re-direct to the Connct-Cloud page
+      window.location.href = "/connect";
+};
+const handleDashboard = () => {
+      // re-direct to the Connct-Cloud page
       window.location.href = "/dashboard";
 };
 export default function Page() {
@@ -32,7 +36,7 @@ export default function Page() {
           <div className="flex items-center gap-2 px-4 w-full">
             <SidebarTrigger className="-ml-1" />
             <Separator orientation="vertical" className="mr-2 h-4" />
-            <Navbar handleConnectCloud={handleConnectCloud} />
+            <Navbar handleConnectCloud={handleConnectCloud} handleDashboard={handleDashboard} />
           </div>
         </header>
         <Dashboardui />
