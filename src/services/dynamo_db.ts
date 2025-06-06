@@ -1,16 +1,12 @@
 import CredentialEncryptionService from "@/lib/encrytion";
 
-export const fetch_buckets = async () => {
+export const fetch_dynamodb_tables = async () => {
     try {
         const encryptedCred = JSON.parse(localStorage.getItem('encrypted_aws_creds')!) as EncryptionObj;
         const encryptionService = new CredentialEncryptionService();
         const credsAsString = await encryptionService.decrypt(encryptedCred!);
         const credentials = JSON.parse(credsAsString) as AWSCredentials;
-        // const creds = localStorage.getItem('encrypted_aws_creds');
-        // if (!creds) {
-        //     throw new Error('AWS credentials not found in local storage');
-        // }
-        const res = await fetch("http://localhost:4000/api/s3/buckets", {
+        const res = await fetch("http://localhost:4000/api/dynamo/tables", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -28,4 +24,4 @@ export const fetch_buckets = async () => {
     } catch (e) {
         console.log(e);
     }
-}
+};
