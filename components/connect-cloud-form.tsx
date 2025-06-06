@@ -24,6 +24,14 @@ import {
 } from "@/components/ui/form";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import NextImage from "next/image";
+import { regions } from "../constants/aws";
+import {
+   Select,
+   SelectContent,
+   SelectItem,
+   SelectTrigger,
+   SelectValue
+} from "./ui/select";
 
 // Define cloud provider types
 type CloudProvider = "aws" | "azure" | "gcp";
@@ -70,7 +78,7 @@ const formSchema = z.discriminatedUnion("provider", [
    gcpSchema,
 ]);
 
-export function ConnectCloudForm() {
+export function ConnectCloudForm({ onConnectAWSCloud }: { onConnectAWSCloud: (etc: any) => Promise<void> }) {
    const [provider, setProvider] = useState<CloudProvider>("aws");
    const [isSubmitting, setIsSubmitting] = useState(false);
    const [submitStatus, setSubmitStatus] = useState<{
@@ -125,7 +133,23 @@ export function ConnectCloudForm() {
 
       try {
          // Simulate API call
-         await new Promise((resolve) => setTimeout(resolve, 1500));
+         // const Creds = values.provider === "aws" ? {
+         //    accessKeyId: values.accessKeyId,
+         //    secretAccessKey: values.secretAccessKey,
+         //    region: values.region,
+         // } : 
+         // values.provider === "azure" ? {
+         //    tenantId: values.tenantId,
+         //    clientId: values.clientId,
+         //    clientSecret: values.clientSecret,
+         //    subscriptionId: values.subscriptionId,
+         // } : 
+         // {
+         //    projectId: values.projectId,
+         //    serviceAccountJson: JSON.parse(values.serviceAccountJson),
+         // };
+
+         await onConnectAWSCloud(values);
 
          console.log("Form submitted:", values);
 
@@ -138,9 +162,8 @@ export function ConnectCloudForm() {
          // Show error message
          setSubmitStatus({
             type: "error",
-            message: `Failed to connect: ${
-               error instanceof Error ? error.message : "Unknown error"
-            }`,
+            message: `Failed to connect: ${error instanceof Error ? error.message : "Unknown error"
+               }`,
          });
       } finally {
          setIsSubmitting(false);
@@ -189,7 +212,7 @@ export function ConnectCloudForm() {
                   <Label
                      htmlFor="aws"
                      className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-white p-4 hover:bg-gray-50 hover:border-gray-300 peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary">
-                        <NextImage src="/assets/AWS.png" alt="Aws" width={48} height={48} />
+                     <NextImage src="/assets/AWS.png" alt="Aws" width={48} height={48} />
                      <div className="text-center font-medium m-2">Amazon Web Service</div>
                   </Label>
                </div>
@@ -277,10 +300,27 @@ export function ConnectCloudForm() {
                                  <FormItem>
                                     <FormLabel>Region</FormLabel>
                                     <FormControl>
-                                       <Input
+                                       {/* <Input
                                           placeholder="us-east-1"
                                           {...field}
-                                       />
+                                       /> */}
+                                       <Select
+                                          onValueChange={field.onChange}
+                                          value={field.value}
+                                       >
+                                          <FormControl>
+                                             <SelectTrigger className="w-full">
+                                                <SelectValue placeholder="Select region" />
+                                             </SelectTrigger>
+                                          </FormControl>
+                                          <SelectContent>
+                                             {regions.map((region) => (
+                                                <SelectItem key={region} value={region}>
+                                                   {region}
+                                                </SelectItem>
+                                             ))}
+                                          </SelectContent>
+                                       </Select>
                                     </FormControl>
                                     <FormDescription>
                                        The AWS region to connect to

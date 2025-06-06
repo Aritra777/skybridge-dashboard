@@ -21,12 +21,14 @@ import {
 
 export function TeamSwitcher({
   teams,
+  end_btn_action
 }: {
   teams: {
     name: string
     logo: React.ElementType
     plan: string
-  }[]
+  }[],
+  end_btn_action?: () => void
 }) {
   const { isMobile } = useSidebar()
   const [activeTeam, setActiveTeam] = React.useState(teams[0])
@@ -79,7 +81,7 @@ export function TeamSwitcher({
               </DropdownMenuItem>
             ))}
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="gap-2 p-2">
+            <DropdownMenuItem className="gap-2 p-2" onClick={end_btn_action}>
               <div className="flex size-6 items-center justify-center rounded-md border bg-background">
                 <Plus className="size-4" />
               </div>

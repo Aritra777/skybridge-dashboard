@@ -165,18 +165,46 @@ import {
    SidebarProvider,
    SidebarTrigger,
 } from "@/components/ui/sidebar";
+import CredentialEncryptionService from "@/lib/encrytion";
 import { Separator } from "@radix-ui/react-separator";
 import { Bell, HelpCircle } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const handleConnectCloud = () => {
-     window.location.href = "/connect";
+   window.location.href = "/connect";
 };
 const handleDashboard = () => {
-     window.location.href = "/dashboard";
+   window.location.href = "/dashboard";
 };
 
-export default function Home() {
+export default function ConnectCloudAccount() {
+   const router = useRouter();
+   const handleSubmit = async (credentials: any) => {
+
+      try {
+         if (!credentials.accessKeyId || !credentials.secretAccessKey) {
+            throw new Error('Access Key ID and Secret Access Key are required');
+         }
+         const encryptionService = new CredentialEncryptionService();
+         const encryptedCreds = await encryptionService.encrypt(
+            JSON.stringify(credentials)
+         );
+
+         // Store encrypted credentials securely
+         // In a real app, send to your backend
+         localStorage.setItem('encrypted_aws_creds', JSON.stringify(encryptedCreds));
+
+         // Initialize S3 service
+         // const s3Service = new S3BucketService(credentials);
+         // await s3Service.testConnection();
+         router.push('/dashboard');
+
+      } catch (error: any) {
+         throw new Error(error.message || 'Failed to connect to AWS');
+      }
+   };
+
    return (
       // <div className="min-h-screen bg-gray-50 flex flex-col">
       //    <header className="flex h-14 items-center gap-4 border-b bg-background px-6">
@@ -219,7 +247,7 @@ export default function Home() {
                   <SidebarTrigger className="-ml-1" />
                   <Separator orientation="vertical" className="mr-2 h-4" />
                   {/* Navbar component used  */}
-                  <Navbar handleConnectCloud={handleConnectCloud} handleDashboard={handleDashboard}/>
+                  <Navbar handleConnectCloud={handleConnectCloud} handleDashboard={handleDashboard} />
                </div>
             </header>
             {/* <Dashboardui /> */}
@@ -228,7 +256,7 @@ export default function Home() {
                <div className="max-w-3xl mx-auto">
                   <div className="bg-white rounded-lg shadow-sm border border-gray-200">
                      <div className="p-6">
-                        <ConnectCloudForm />
+                        <ConnectCloudForm onConnectAWSCloud={handleSubmit} />
                      </div>
                   </div>
                </div>
