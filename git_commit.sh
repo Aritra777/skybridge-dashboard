@@ -4,18 +4,23 @@
 if git diff --quiet && git diff --cached --quiet; then
   # No changes to commit, check for unpushed commits
   branch=$(git rev-parse --abbrev-ref HEAD)
-  # Check if local branch is ahead of remote
-  ahead=$(git rev-list --count origin/$branch..$branch)
-  if [ "$ahead" -gt 0 ]; then
-    read -p "You have $ahead unpushed commit(s). Do you want to push to $branch? (y/N): " answer
-    if [[ "$answer" == "y" || "$answer" == "Y" ]]; then
-      git push origin "$branch"
-      echo "Changes pushed to $branch."
+  # Check if remote branch exists
+  if git rev-parse --verify --quiet origin/$branch >/dev/null; then
+    # Check if local branch is ahead of remote
+    ahead=$(git rev-list --count origin/$branch..$branch)
+    if [ "$ahead" -gt 0 ]; then
+      read -p "You have $ahead unpushed commit(s). Do you want to push to $branch? (y/N): " answer
+      if [[ "$answer" == "y" || "$answer" == "Y" ]]; then
+        git push origin "$branch"
+        echo "Changes pushed to $branch."
+      else
+        echo "No action taken."
+      fi
     else
-      echo "No action taken."
+      echo "Nothing to commit or push."
     fi
   else
-    echo "Nothing to commit or push."
+    echo "Nothing to commit or push. (Remote branch does not exist yet)"
   fi
   exit 0
 fi
