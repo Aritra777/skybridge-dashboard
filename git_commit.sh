@@ -20,7 +20,20 @@ if git diff --quiet && git diff --cached --quiet; then
       echo "Nothing to commit or push."
     fi
   else
-    echo "Nothing to commit or push. (Remote branch does not exist yet)"
+    # Remote branch does not exist yet
+    # Check if there are any commits on this branch
+    commits=$(git rev-list --count HEAD)
+    if [ "$commits" -gt 0 ]; then
+      read -p "Remote branch does not exist yet. Do you want to publish '$branch' and push all commits? (y/N): " answer
+      if [[ "$answer" == "y" || "$answer" == "Y" ]]; then
+        git push -u origin "$branch"
+        echo "Branch '$branch' published and changes pushed."
+      else
+        echo "No action taken."
+      fi
+    else
+      echo "Nothing to commit or push."
+    fi
   fi
   exit 0
 fi
@@ -41,8 +54,14 @@ branch=$(git rev-parse --abbrev-ref HEAD)
 read -p "Do you want to push to the current branch($branch)? (y/N): " answer
 
 if [[ "$answer" == "y" || "$answer" == "Y" ]]; then
-  git push origin "$branch"
-  echo "Changes pushed to $branch."
+  # Check if remote branch exists before pushing
+  if git rev-parse --verify --quiet origin/$branch >/dev/null; then
+    git push origin "$branch"
+    echo "Changes pushed to $branch."
+  else
+    git push -u origin "$branch"
+    echo "Branch '$branch' published and changes pushed."
+  fi
 else
   echo "Changes committed locally. Not pushed."
 fi
