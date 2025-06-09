@@ -72,24 +72,20 @@ export const sidebar_defination = {
         },
         {
             title: "Storage",
-            url: "#",
+            url: "/storage",
             icon: BookOpen,
             items: [
                 {
                     title: "S3",
-                    url: "#",
+                    url: "/storage/s3",
                 },
                 {
                     title: "EBS",
-                    url: "#",
-                },
-                {
-                    title: "EFS",
-                    url: "#",
+                    url: "/storage/ebs",
                 },
                 {
                     title: "DynamoDB",
-                    url: "#",
+                    url: "/storage/dynamodb",
                 },
             ],
         },

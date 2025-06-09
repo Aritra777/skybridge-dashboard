@@ -21,9 +21,17 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { fetch_buckets } from '@/services/s3';
 import { BasicSidebarLayout } from '@/components/basic_sidebar_layout';
+import { Badge } from '@/components/ui/badge';
+
+interface Bucket {
+    Name: string;
+    CreationDate: string;
+    cost: number;
+}
 
 const AWSS3Lists = () => {
-    const [buckets, setBuckets] = useState<{ Name: string, CreationDate: string }[]>([]);
+    const [buckets, setBuckets] = useState<Bucket[]>([]);
+    const [totalCost, setTotalCost] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState('');
     const [searchTerm, setSearchTerm] = useState('');
@@ -41,7 +49,8 @@ const AWSS3Lists = () => {
                 setError('');
                 const response = await fetch_buckets();
                 if (!response) throw new Error('Failed to fetch buckets');
-                setBuckets(response);
+                setBuckets(response.buckets);
+                setTotalCost(response.totalCost);
             } catch (err) {
                 setError('Failed to load S3 buckets. Please check your credentials and try again.');
                 console.error(err);
@@ -152,8 +161,13 @@ const AWSS3Lists = () => {
                     ) : (
                         <>
                             <Card className="mb-4">
-                                <CardHeader>
-                                    <CardTitle>S3 Buckets</CardTitle>
+                                <CardHeader className='w-full'>
+                                    <div className='flex justify-between'>
+                                        <CardTitle className='text-2xl'>S3 Buckets</CardTitle>
+                                        <Badge className='text-xl'>
+                                            Total: ${totalCost}
+                                        </Badge>
+                                    </div>
                                 </CardHeader>
                                 <CardContent>
                                     <Input
@@ -166,12 +180,20 @@ const AWSS3Lists = () => {
                                         <TableHeader>
                                             <SortableHeader column="Name" label="Bucket Name" />
                                             <SortableHeader column="CreationDate" label="Creation Date" />
+                                            <SortableHeader column="Cost" label="Current Cost" />
                                         </TableHeader>
                                         <TableBody>
                                             {filteredAndSortedBuckets.map((bucket, index) => (
                                                 <TableRow key={index}>
                                                     <TableCell>{bucket.Name}</TableCell>
-                                                    <TableCell>{new Date(bucket.CreationDate).toLocaleString()}</TableCell>
+                                                    <TableCell>
+                                                        <Badge className='bg-yellow-200 text-black'>
+                                                            {new Date(bucket.CreationDate).toLocaleString()}
+                                                        </Badge>
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <Badge>{`$ ${bucket.cost}`}</Badge>
+                                                    </TableCell>
                                                 </TableRow>
                                             ))}
                                         </TableBody>

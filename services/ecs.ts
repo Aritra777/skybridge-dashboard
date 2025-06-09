@@ -20,13 +20,13 @@ export const fetch_ecs_clusters = async () => {
 
         const data = await res.json();
 
-        return data;
+        return data.map((d: any) => d.clusterArn);
     } catch (e) {
         console.log(e);
     }
 };
 
-export const fetch_ecs_services = async () => {
+export const fetch_ecs_services = async (clusterArn: string) => {
     try {
         const encryptedCred = JSON.parse(localStorage.getItem('encrypted_aws_creds')!) as EncryptionObj;
         const encryptionService = new CredentialEncryptionService();
@@ -41,13 +41,17 @@ export const fetch_ecs_services = async () => {
                 accessKeyId: credentials.accessKeyId,
                 secretAccessKey: credentials.secretAccessKey,
                 region: credentials.region,
+                clusterArn
             })
         });
+        if (!res.ok) {
+            throw new Error("Error in fetching Services.");
+        }
 
         const data = await res.json();
 
         return data;
     } catch (e) {
-        console.log(e);
+        throw new Error("Something went worng in fetching ecs.");
     }
 };
