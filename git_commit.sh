@@ -5,7 +5,7 @@ if git diff --quiet && git diff --cached --quiet; then
   # No changes to commit, check for unpushed commits
   branch=$(git rev-parse --abbrev-ref HEAD)
   # Check if remote branch exists
-  if git rev-parse --verify --quiet origin/$branch >/dev/null; then
+  if git rev-parse --verify --quiet origin/$branch; then
     # Check if local branch is ahead of remote
     ahead=$(git rev-list --count origin/$branch..$branch)
     if [ "$ahead" -gt 0 ]; then

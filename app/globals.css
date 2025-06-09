@@ -120,3 +120,7 @@
     @apply bg-background text-foreground;
   }
 }
+
+.compute-form > div > div > button {
+  @apply w-full;
+}

@@ -20,6 +20,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { fetch_buckets } from '@/services/s3';
+import { BasicSidebarLayout } from '@/components/basic_sidebar_layout';
 
 const AWSS3Lists = () => {
     const [buckets, setBuckets] = useState<{ Name: string, CreationDate: string }[]>([]);
@@ -112,76 +113,76 @@ const AWSS3Lists = () => {
         </TableHead>
     );
 
-    if (isLoading) {
-        return (
-            <div className="flex items-center justify-center min-h-[400px]">
-                <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
-            </div>
-        );
-    }
+    // if (isLoading) {
+    //     return (
+    //         <div className="flex items-center justify-center min-h-[400px]">
+    //             <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+    //         </div>
+    //     );
+    // }
 
-    if (error) {
-        return (
-            <Alert variant="destructive" className="mt-4">
-                <AlertDescription>{error}</AlertDescription>
-            </Alert>
-        );
-    }
+    // if (error) {
+    //     return (
+    //         <Alert variant="destructive" className="mt-4">
+    //             <AlertDescription>{error}</AlertDescription>
+    //         </Alert>
+    //     );
+    // }
 
-    if (!buckets.length) {
-        return (
-            <Alert className="mt-4">
-                <AlertDescription>No S3 buckets found in your account.</AlertDescription>
-            </Alert>
-        );
-    }
+    // if (!buckets.length) {
+    //     return (
+    //         <Alert className="mt-4">
+    //             <AlertDescription>No S3 buckets found in your account.</AlertDescription>
+    //         </Alert>
+    //     );
+    // }
 
     return (
-        <Card className="w-full">
-            <CardHeader>
-                <CardTitle className="text-xl font-semibold">S3 Buckets</CardTitle>
-                <div className="relative w-full max-w-sm">
-                    <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                    <Input
-                        placeholder="Search buckets..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="pl-8"
-                    />
-                </div>
-            </CardHeader>
-            <CardContent>
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <SortableHeader column="Name" label="Bucket Name" />
-                            <SortableHeader column="CreationDate" label="Creation Date" />
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {filteredAndSortedBuckets.map((bucket) => (
-                            <TableRow key={bucket.Name}>
-                                <TableCell className="font-medium">{bucket.Name}</TableCell>
-                                <TableCell>
-                                    {new Date(bucket.CreationDate).toLocaleDateString(undefined, {
-                                        year: 'numeric',
-                                        month: 'long',
-                                        day: 'numeric',
-                                        hour: '2-digit',
-                                        minute: '2-digit'
-                                    })}
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-                {filteredAndSortedBuckets.length === 0 && (
-                    <div className="text-center py-4 text-gray-500">
-                        No buckets found matching your search.
-                    </div>
-                )}
-            </CardContent>
-        </Card>
+        <BasicSidebarLayout>
+            <div className='p-4'>
+                {
+                    isLoading ? (
+                        <div className="flex items-center justify-center min-h-[400px]">
+                            <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+                        </div>
+                    ) : error ? (
+                        <Alert variant="destructive" className="mt-4">
+                            <AlertDescription>{error}</AlertDescription>
+                        </Alert>
+                    ) : (
+                        <>
+                            <Card className="mb-4">
+                                <CardHeader>
+                                    <CardTitle>S3 Buckets</CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <Input
+                                        placeholder="Search buckets..."
+                                        value={searchTerm}
+                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                        className="mb-4"
+                                    />
+                                    <Table>
+                                        <TableHeader>
+                                            <SortableHeader column="Name" label="Bucket Name" />
+                                            <SortableHeader column="CreationDate" label="Creation Date" />
+                                        </TableHeader>
+                                        <TableBody>
+                                            {filteredAndSortedBuckets.map((bucket, index) => (
+                                                <TableRow key={index}>
+                                                    <TableCell>{bucket.Name}</TableCell>
+                                                    <TableCell>{new Date(bucket.CreationDate).toLocaleString()}</TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                </CardContent>
+                            </Card>
+                        </>
+                    )
+                }
+            </div>
+        </BasicSidebarLayout>
     );
 };
 

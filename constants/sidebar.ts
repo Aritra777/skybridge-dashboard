@@ -120,8 +120,13 @@ export const sidebar_defination = {
     projects: [
         {
             name: "Recommendations",
-            url: "#",
+            url: "/recommendation",
             icon: PieChart,
+        },
+        {
+            name: "Cost Calculator",
+            url: "/cost-calculator",
+            icon: Frame,
         },
         {
             name: "Compare",

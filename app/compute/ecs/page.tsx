@@ -1,6 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { fetch_ecs_services } from '@/services/ecs';
+import { BasicSidebarLayout } from '@/components/basic_sidebar_layout';
 
 function ECSServices() {
     const [clusters, setClusters] = useState<any[]>([]);
@@ -36,7 +37,7 @@ function ECSServices() {
     console.log(clusters);
 
     return (
-        <div>
+        <BasicSidebarLayout>
             {isLoading ? (
                 <p>Loading...</p>
             ) : error ? (
@@ -57,13 +58,13 @@ function ECSServices() {
                         }}
                     />
                     <ul>
-                        {/* {filteredClusters.map((cluster, index) => (
+                        {filteredClusters.map?.((cluster, index) => (
                             <li key={index}>{cluster.name}</li>
-                        ))} */}
+                        ))}
                     </ul>
                 </div>
             )}
-        </div>
+        </BasicSidebarLayout>
     );
 }
 

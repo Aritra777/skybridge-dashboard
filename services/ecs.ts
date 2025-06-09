@@ -6,7 +6,7 @@ export const fetch_ecs_clusters = async () => {
         const encryptionService = new CredentialEncryptionService();
         const credsAsString = await encryptionService.decrypt(encryptedCred!);
         const credentials = JSON.parse(credsAsString) as AWSCredentials;
-        const res = await fetch("http://localhost:4000/api/ecs/clusters", {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_BACKEND}/ecs/clusters`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -32,7 +32,7 @@ export const fetch_ecs_services = async () => {
         const encryptionService = new CredentialEncryptionService();
         const credsAsString = await encryptionService.decrypt(encryptedCred!);
         const credentials = JSON.parse(credsAsString) as AWSCredentials;
-        const res = await fetch("http://localhost:4000/api/ecs/services", {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_BACKEND}/ecs/services`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

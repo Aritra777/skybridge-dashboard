@@ -6,7 +6,7 @@ export const fetch_cost = async () => {
         const encryptionService = new CredentialEncryptionService();
         const credsAsString = await encryptionService.decrypt(encryptedCred!);
         const credentials = JSON.parse(credsAsString) as AWSCredentials;
-        const res = await fetch("http://localhost:4000/api/cost", {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_BACKEND}/cost`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

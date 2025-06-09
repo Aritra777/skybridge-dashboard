@@ -1,3 +1,4 @@
+"use client";
 import CredentialEncryptionService from "@/lib/encrytion";
 
 export const fetch_ec2_instances = async () => {
@@ -6,7 +7,7 @@ export const fetch_ec2_instances = async () => {
         const encryptionService = new CredentialEncryptionService();
         const credsAsString = await encryptionService.decrypt(encryptedCred!);
         const credentials = JSON.parse(credsAsString) as AWSCredentials;
-        const res = await fetch("http://localhost:4000/api/ec2/instances", {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_BACKEND}/ec2/instances`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

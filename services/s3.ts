@@ -10,7 +10,7 @@ export const fetch_buckets = async () => {
         // if (!creds) {
         //     throw new Error('AWS credentials not found in local storage');
         // }
-        const res = await fetch("http://localhost:4000/api/s3/buckets", {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_BACKEND}/s3/buckets`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

@@ -6,7 +6,7 @@ export const fetch_dynamodb_tables = async () => {
         const encryptionService = new CredentialEncryptionService();
         const credsAsString = await encryptionService.decrypt(encryptedCred!);
         const credentials = JSON.parse(credsAsString) as AWSCredentials;
-        const res = await fetch("http://localhost:4000/api/dynamo/tables", {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_BACKEND}/dynamo/tables`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
