@@ -17,8 +17,19 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { useState } from 'react'
+import { useSignUp } from '@clerk/nextjs'
 export default function Component() {
+  
+  // const {isLoaded, signUp, setActive} = useSignUp();
+  // const [emailAddress,setEmailAddress] = useState("");
+  // const [password,setPassword] = useState("");
+  // const [verification,setPendingVerfication] = useState(false);
+  // const [code,setCode] = useState("");
+  // const [error,setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+
+  
+
   return (
     <div className="min-h-screen w-full">
       <header className="flex h-16 items-center justify-between px-6 border-b">
