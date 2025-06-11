@@ -18,85 +18,58 @@ import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { useState } from 'react'
 import { useSignUp } from '@clerk/nextjs'
-import { useRouter } from 'next/navigation';
-export default function Component() {
-  
-  // const {isLoaded, signUp, setActive} = useSignUp();
-  // const [emailAddress,setEmailAddress] = useState("");
-  // const [password,setPassword] = useState("");
-  // const [verification,setPendingVerfication] = useState(false);
-  // const [code,setCode] = useState("");
-  // const [error,setError] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const {isLoaded, signUp, setActive} = useSignUp();
-   const [emailAddress,setEmailAddress] = useState("");
-   const [password,setPassword] = useState("");
-   const [verification,setPendingVerfication] = useState(false);
-   const [code,setCode] = useState("");
-   const [error,setError] = useState("");
+import { useRouter } from 'next/navigation'
 
-   const router = useRouter();
+export default function Signup() {
+  const [showPassword, setShowPassword] = useState(false)
+  const { isLoaded, signUp, setActive } = useSignUp()
+  const [emailAddress, setEmailAddress] = useState('')
+  const [password, setPassword] = useState('')
+  const [verification, setPendingVerfication] = useState(false)
+  const [code, setCode] = useState('')
+  const [error, setError] = useState('')
+  const router = useRouter()
 
-   if(!isLoaded){
-      return null;
-   }
-   async function submit(e: React.FormEvent) {
-      e.preventDefault();
-      if(!isLoaded){
-         return;
+  if (!isLoaded) return null
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault()
+    if (!isLoaded) return
+
+    try {
+      await signUp.create({ emailAddress, password })
+      await signUp.prepareEmailAddressVerification({ strategy: 'email_code' })
+      setPendingVerfication(true)
+    } catch (error: any) {
+      console.log(JSON.stringify(error, null, 2))
+      setError(error.errors[0].message)
+    }
+  }
+
+  async function onPressVerify(e: React.FormEvent) {
+    e.preventDefault()
+    if (!isLoaded) return
+
+    try {
+      const completeSignup = await signUp.attemptEmailAddressVerification({ code })
+      if (completeSignup.status !== 'complete') {
+        console.log(JSON.stringify(completeSignup, null, 2))
+        return
       }
-      try {
-         await signUp.create({
-            emailAddress,
-            password
-         })
-         await signUp.prepareEmailAddressVerification({
-            strategy: "email_code"
-         });
-         setPendingVerfication(true);
 
-      } catch (error: any) {
-         console.log(JSON.stringify(error, null, 2));
-         setError(error.errors[0].message);
-      }
-   }
+      await setActive({ session: completeSignup.createdSessionId })
+      router.push('/dashboard')
+    } catch (error: any) {
+      console.log(JSON.stringify(error, null, 2))
+      setError(error.errors[0].message)
+    }
+  }
 
-   async function onPressVerify(e: React.FormEvent) {
-      e.preventDefault();
-      if(!isLoaded){
-         return;
-      }
-      try {
-         const completeSignup = await signUp.attemptEmailAddressVerification({code});
-         if(completeSignup.status !== "complete"){
-            console.log(JSON.stringify(completeSignup,null,2));
-         }
-         if(completeSignup.status === "complete"){
-            //console.log(JSON.stringify(completeSignup));
-            await setActive({session: completeSignup.createdSessionId});
-            router.push("/dashboard");
-         }
-
-      } catch (error: any) {
-         console.log(JSON.stringify(error,null,2));
-         setError(error.errors[0].message);
-      }
-   }
   return (
     <div className="min-h-screen w-full">
       <header className="flex h-16 items-center justify-between px-6 border-b">
         <Link href="/" className="flex items-center gap-2">
-          {/* <div className="flex h-6 w-6 items-center justify-center rounded-lg border">
-            <span className="sr-only"></span>
-            A
-          </div> */}
-          <Image
-            src={"/image/SkyBridge.svg"}
-            width={40}
-            height={40}
-            alt="Picture of the author"
-          />
-          <span className="text-lg font-semibold"></span>
+          <Image src="/image/SkyBridge.svg" width={40} height={40} alt="SkyBridge logo" />
         </Link>
         <Link
           href="/login"
@@ -112,9 +85,7 @@ export default function Component() {
               <blockquote className="text-2xl font-medium leading-normal italic">
                 "The cloud-agnostic tool provides unified resource management, optimizing multi-cloud costs and efficiency through usage analysis and smart recommendations."
               </blockquote>
-              <figcaption className="text-lg font-semibold">
-                Sky Bridge
-              </figcaption>
+              <figcaption className="text-lg font-semibold">Sky Bridge</figcaption>
             </figure>
           </div>
         </div>
@@ -123,57 +94,85 @@ export default function Component() {
             <CardHeader className="space-y-1">
               <CardTitle className="text-2xl font-bold">Create an account</CardTitle>
               <CardDescription>
-                Enter your email below to create your account
+                {verification
+                  ? 'Enter the verification code sent to your email.'
+                  : 'Enter your email below to create your account.'}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  placeholder="name@example.com"
-                  required
-                  type="email"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <div className="relative">
-                  <Input
-                    id="password"
-                    required
-                    type={showPassword ? 'text' : 'password'}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword((prev) => !prev)}
-                    className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500"
-                  >
-                    {showPassword ? (
-                      <EyeOff className="h-5 w-5" />
-                    ) : (
-                      <Eye className="h-5 w-5" />
-                    )}
-                  </button>
-                </div>
-              </div>
-              <Button className="w-full" type="submit">
-                Sign up
-              </Button>
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <Separator />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-background px-2 text-muted-foreground">
-                    Or continue with
-                  </span>
-                </div>
-              </div>
-              <Button variant="outline" className="w-full" type="button">
-                <Github className="mr-2 h-4 w-4" />
-                GitHub
-              </Button>
+              {!verification ? (
+                <form onSubmit={submit} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email</Label>
+                    <Input
+                      id="email"
+                      placeholder="name@example.com"
+                      required
+                      type="email"
+                      value={emailAddress}
+                      onChange={(e) => setEmailAddress(e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="password">Password</Label>
+                    <div className="relative">
+                      <Input
+                        id="password"
+                        required
+                        type={showPassword ? 'text' : 'password'}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword((prev) => !prev)}
+                        className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500"
+                      >
+                        {showPassword ? (
+                          <EyeOff className="h-5 w-5" />
+                        ) : (
+                          <Eye className="h-5 w-5" />
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                  {error && <p className="text-sm text-red-500">{error}</p>}
+                  <Button className="w-full mt-2 cursor-pointer" type="submit" >
+                    Sign up
+                  </Button>
+                  <div className="relative">
+                    <div className="absolute inset-0 flex items-center">
+                      <Separator />
+                    </div>
+                    <div className="relative flex justify-center text-xs uppercase">
+                      <span className="bg-background px-2 text-muted-foreground">
+                        Or continue with
+                      </span>
+                    </div>
+                  </div>
+                  <Button variant="outline" className="w-full cursor-pointer" type="button">
+                    <Github className="mr-2 h-4 w-4" />
+                    GitHub
+                  </Button>
+                </form>
+              ) : (
+                <form onSubmit={onPressVerify} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="code">Verification Code</Label>
+                    <Input
+                      id="code"
+                      placeholder="Enter the code sent to your email"
+                      required
+                      value={code}
+                      onChange={(e) => setCode(e.target.value)}
+                    />
+                  </div>
+                  {error && <p className="text-sm text-red-500">{error}</p>}
+                  <Button className="w-full mt-2" type="submit">
+                    Verify Email
+                  </Button>
+                </form>
+              )}
             </CardContent>
             <CardFooter>
               <p className="text-center text-sm text-muted-foreground">
@@ -183,8 +182,8 @@ export default function Component() {
                   className="underline underline-offset-4 hover:text-primary"
                 >
                   Terms of Service
-                </Link>
-                {' '}and{' '}
+                </Link>{' '}
+                and{' '}
                 <Link
                   href="/privacy"
                   className="underline underline-offset-4 hover:text-primary"
