@@ -175,7 +175,7 @@ export default function Signin() {
                     </div>
                   </div>
 
-                  <Button className="w-full" type="submit">
+                  <Button className="w-full cursor-pointer" type="submit">
                     Sign in
                   </Button>
                 </form>
@@ -208,7 +208,7 @@ export default function Signin() {
                 </div>
               </div>
 
-              <Button variant="outline" className="w-full" type="button">
+              <Button variant="outline" className="w-full cursor-pointer" type="button">
                 <Github className="mr-2 h-4 w-4" />
                 GitHub
               </Button>
