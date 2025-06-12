@@ -19,6 +19,7 @@ import {
   Shield,
   Clock,
 } from "lucide-react"
+import { useRouter } from "next/navigation";
 
 export default function UserProfile() {
   const { isLoaded, isSignedIn, user } = useUser()
@@ -38,6 +39,10 @@ export default function UserProfile() {
   const userId = user.id
   const lastLoginRaw = user.lastSignInAt || user.createdAt
   const lastLogin = lastLoginRaw ? new Date(lastLoginRaw).toLocaleString() : "N/A"
+  const router = useRouter()
+  const handleRoleAuth = () => {
+    router.push('/role-auth')
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
@@ -46,7 +51,7 @@ export default function UserProfile() {
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Profile</h1>
           <div className="flex gap-3">
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" onClick={handleRoleAuth}>
               <Edit className="h-4 w-4 mr-2" />
               Edit Profile
             </Button>
