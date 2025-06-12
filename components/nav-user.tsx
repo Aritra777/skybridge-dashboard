@@ -5,6 +5,7 @@ import {
   Bell,
   ChevronsUpDown,
   CreditCard,
+  Link,
   LogOut,
   Sparkles,
 } from "lucide-react"
@@ -30,6 +31,10 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar'
 
+import { SignOutButton } from '@clerk/nextjs'
+import { useRouter } from "next/navigation"
+
+
 export function NavUser({
   user,
 }: {
@@ -40,6 +45,10 @@ export function NavUser({
   }
 }) {
   const { isMobile } = useSidebar()
+  const router = useRouter()
+  const handleUserProfile = () => {
+    router.push('/user-profile')
+  }
 
   return (
     <SidebarMenu>
@@ -88,24 +97,32 @@ export function NavUser({
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheck />
-                Account
+              <DropdownMenuItem onClick={handleUserProfile}>
+                  <BadgeCheck />
+                  Account
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem >
                 <CreditCard />
                 Billing
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
-                Notifications
-              </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <LogOut />
-              Log out
-            </DropdownMenuItem>
+            {/* <DropdownMenuItem>
+              <SignOutButton>
+                <LogOut />
+                Log out
+              </SignOutButton>
+            </DropdownMenuItem> */}
+
+            <SignOutButton>
+              <DropdownMenuItem asChild>
+                <div className="flex items-center gap-2">
+                  <LogOut />
+                  <span>Log out</span>
+                </div>
+              </DropdownMenuItem>
+            </SignOutButton>
+
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
