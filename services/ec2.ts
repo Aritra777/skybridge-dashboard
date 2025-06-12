@@ -26,3 +26,28 @@ export const fetch_ec2_instances = async () => {
         console.log(e);
     }
 };
+export const fetch_ec2_volumes = async () => {
+    try {
+        const encryptedCred = JSON.parse(localStorage.getItem('encrypted_aws_creds')!) as EncryptionObj;
+        const encryptionService = new CredentialEncryptionService();
+        const credsAsString = await encryptionService.decrypt(encryptedCred!);
+        const credentials = JSON.parse(credsAsString) as AWSCredentials;
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_BACKEND}/ec2/volumes`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                accessKeyId: credentials.accessKeyId,
+                secretAccessKey: credentials.secretAccessKey,
+                region: credentials.region,
+            })
+        });
+
+        const data = await res.json();
+
+        return data;
+    } catch (e) {
+        console.log(e);
+    }
+};
