@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
     AudioWaveform,
     BookOpen,
@@ -123,11 +124,6 @@ export const sidebar_defination = {
             name: "Cost Calculator",
             url: "/cost-calculator",
             icon: Frame,
-        },
-        {
-            name: "Compare",
-            url: "#",
-            icon: Map,
         },
     ],
 }
