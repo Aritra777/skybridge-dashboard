@@ -88,7 +88,7 @@ const PricingPage = () => {
       {isLoading ? (
         <LoadingSpinner   />
       ) : (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 font-sans text-gray-900 py-12 px-4 sm:px-6 lg:px-8 flex flex-col items-center">
+        <div className="min-h-screen bg-gradient-to-br bg-white text-gray-900 py-12 px-4 sm:px-6 lg:px-8 flex flex-col items-center">
           {/* Pricing Page Header */}
           <div className="text-center mb-12">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-blue-800 leading-tight rounded-md p-4">
