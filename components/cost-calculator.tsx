@@ -332,25 +332,25 @@ export default function CostCalculator() {
 
               {/* Comparison (simulated) */}
               <div className="space-y-3">
-                <div className="flex items-center justify-between p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                {/* <div className="flex items-center justify-between p-4 bg-blue-50 border border-blue-200 rounded-lg">
                   <div className="flex items-center gap-3">
                     <div className="bg-blue-500 text-white px-2 py-1 rounded text-sm font-medium">GCP</div>
                     <span className="font-medium">Google Cloud Platform</span>
                   </div>
                   <span className="text-2xl font-bold text-blue-600">${(estimatedCost * 0.95).toFixed(2)}</span>
-                </div>
-
+                </div> */}
+{/* 
                 <div className="flex items-center justify-between p-4 bg-blue-50 border border-blue-200 rounded-lg">
                   <div className="flex items-center gap-3">
                     <div className="bg-blue-600 text-white px-2 py-1 rounded text-sm font-medium">Azure</div>
                     <span className="font-medium">Microsoft Azure</span>
                   </div>
                   <span className="text-2xl font-bold text-blue-600">${(estimatedCost * 1.02).toFixed(2)}</span>
-                </div>
+                </div> */}
               </div>
 
               {/* Recommendation */}
-              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+              {/* <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                 <div className="flex items-center gap-2 mb-2">
                   <Lightbulb className="h-5 w-5 text-green-600" />
                   <span className="font-semibold text-green-800">Recommendation</span>
@@ -362,7 +362,7 @@ export default function CostCalculator() {
                 <div className="text-green-600 text-xs mt-2">
                   * Prices are estimates and may vary based on actual usage, region, and current pricing
                 </div>
-              </div>
+              </div> */}
 
               {/* Cost Breakdown */}
               <div className="bg-gray-50 rounded-lg p-4">
@@ -394,96 +394,6 @@ export default function CostCalculator() {
             </CardContent>
           </Card>
         </div>
-
-        {/* Service Information */}
-        <Card>
-          <CardHeader>
-            <CardTitle>About {currentService.name}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <h4 className="font-semibold mb-2">Key Features</h4>
-                <ul className="text-sm text-gray-600 space-y-1">
-                  {activeService === "EC2" && (
-                    <>
-                      <li>• Scalable virtual servers in the cloud</li>
-                      <li>• Multiple instance types for different workloads</li>
-                      <li>• Pay only for what you use</li>
-                      <li>• Auto Scaling and Load Balancing</li>
-                    </>
-                  )}
-                  {activeService === "S3" && (
-                    <>
-                      <li>• Object storage with 99.999999999% durability</li>
-                      <li>• Multiple storage classes for cost optimization</li>
-                      <li>• Lifecycle management</li>
-                      <li>• Global content delivery</li>
-                    </>
-                  )}
-                  {activeService === "Route53" && (
-                    <>
-                      <li>• Highly available DNS web service</li>
-                      <li>• Domain registration</li>
-                      <li>• Health checking and monitoring</li>
-                      <li>• Traffic routing policies</li>
-                    </>
-                  )}
-                  {activeService === "VPC" && (
-                    <>
-                      <li>• Isolated cloud resources</li>
-                      <li>• Complete control over networking</li>
-                      <li>• Multiple connectivity options</li>
-                      <li>• Enhanced security</li>
-                    </>
-                  )}
-                  {activeService === "ECS" && (
-                    <>
-                      <li>• Fully managed container orchestration</li>
-                      <li>• Serverless with AWS Fargate</li>
-                      <li>• Integration with AWS services</li>
-                      <li>• Auto scaling and load balancing</li>
-                    </>
-                  )}
-                  {activeService === "EFS" && (
-                    <>
-                      <li>• Fully managed NFS file system</li>
-                      <li>• Elastic scaling</li>
-                      <li>• Multiple storage classes</li>
-                      <li>• POSIX-compliant</li>
-                    </>
-                  )}
-                  {activeService === "DynamoDB" && (
-                    <>
-                      <li>• Fully managed NoSQL database</li>
-                      <li>• Single-digit millisecond latency</li>
-                      <li>• Automatic scaling</li>
-                      <li>• Built-in security and backup</li>
-                    </>
-                  )}
-                  {activeService === "EBS" && (
-                    <>
-                      <li>• High-performance block storage</li>
-                      <li>• Multiple volume types</li>
-                      <li>• Snapshot and encryption</li>
-                      <li>• 99.999% availability</li>
-                    </>
-                  )}
-                </ul>
-              </div>
-              <div>
-                <h4 className="font-semibold mb-2">Pricing Notes</h4>
-                <ul className="text-sm text-gray-600 space-y-1">
-                  <li>• Prices shown are for US East (N. Virginia) region</li>
-                  <li>• Actual costs may vary based on usage patterns</li>
-                  <li>• Free tier benefits not included in calculations</li>
-                  <li>• Data transfer charges may apply</li>
-                  <li>• Volume discounts available for large usage</li>
-                </ul>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
       </div>
     </div>
   )
