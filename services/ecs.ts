@@ -55,3 +55,33 @@ export const fetch_ecs_services = async (clusterArn: string) => {
         throw new Error("Something went worng in fetching ecs.");
     }
 };
+
+export const fetch_ecs_tasks = async (clusterArn: string) => {
+    try {
+        const encryptedCred = JSON.parse(localStorage.getItem('encrypted_aws_creds')!) as EncryptionObj;
+        const encryptionService = new CredentialEncryptionService();
+        const credsAsString = await encryptionService.decrypt(encryptedCred!);
+        const credentials = JSON.parse(credsAsString) as AWSCredentials;
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_BACKEND}/ecs/tasks`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                accessKeyId: credentials.accessKeyId,
+                secretAccessKey: credentials.secretAccessKey,
+                region: credentials.region,
+                clusterArn
+            })
+        });
+        if (!res.ok) {
+            throw new Error("Error in fetching Services.");
+        }
+
+        const data = await res.json();
+
+        return data;
+    } catch (e) {
+        throw new Error("Something went worng in fetching ecs.");
+    }
+};

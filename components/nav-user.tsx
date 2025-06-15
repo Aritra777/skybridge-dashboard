@@ -5,11 +5,10 @@ import {
   Bell,
   ChevronsUpDown,
   CreditCard,
+  Link,
   LogOut,
   Sparkles,
 } from "lucide-react"
-
-import { useRouter } from "next/navigation"
 
 import {
   Avatar,
@@ -32,6 +31,10 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar'
 
+import { SignOutButton } from '@clerk/nextjs'
+import { useRouter } from "next/navigation"
+import { useUser } from "@clerk/nextjs"
+
 export function NavUser({
   user,
 }: {
@@ -43,7 +46,10 @@ export function NavUser({
 }) {
   const { isMobile } = useSidebar()
   const router = useRouter()
-
+  const handleUserProfile = () => {
+    router.push('/user-profile')
+  }
+  const { isLoaded, isSignedIn, user: User } = useUser();
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -54,12 +60,12 @@ export function NavUser({
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={user.avatar} alt={user.name} />
+                <AvatarImage src={user.avatar} alt={User?.id?.slice(0, 7)} />
                 <AvatarFallback className="rounded-lg">CN</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">{user.name}</span>
-                <span className="truncate text-xs">{user.email}</span>
+                <span className="truncate font-semibold">{User?.id?.slice(0, 7)}</span>
+                <span className="truncate text-xs">{User?.primaryEmailAddress?.emailAddress || "Not available"}</span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -74,12 +80,12 @@ export function NavUser({
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.avatar} alt={user.name} />
+                  <AvatarImage src={user.avatar} alt={User?.id?.slice(0, 7)} />
                   <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">{user.name}</span>
-                  <span className="truncate text-xs">{user.email}</span>
+                  <span className="truncate font-semibold">{User?.id?.slice(0, 7)}</span>
+                  <span className="truncate text-xs">{User?.primaryEmailAddress?.emailAddress || "Not available"}</span>
                 </div>
               </div>
             </DropdownMenuLabel>
@@ -96,26 +102,33 @@ export function NavUser({
             <DropdownMenuSeparator />
 
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheck className="mr-2 h-4 w-4" />
+              <DropdownMenuItem onClick={handleUserProfile}>
+                <BadgeCheck />
                 Account
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => router.push('/Billing')}>
-                <CreditCard className="mr-2 h-4 w-4" />
+              <DropdownMenuItem >
+                <CreditCard />
                 Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell className="mr-2 h-4 w-4" />
-                Notifications
               </DropdownMenuItem>
             </DropdownMenuGroup>
 
             <DropdownMenuSeparator />
+            {/* <DropdownMenuItem>
+              <SignOutButton>
+                <LogOut />
+                Log out
+              </SignOutButton>
+            </DropdownMenuItem> */}
 
-            <DropdownMenuItem>
-              <LogOut className="mr-2 h-4 w-4" />
-              Log out
-            </DropdownMenuItem>
+            <SignOutButton>
+              <DropdownMenuItem asChild>
+                <div className="flex items-center gap-2">
+                  <LogOut />
+                  <span>Log out</span>
+                </div>
+              </DropdownMenuItem>
+            </SignOutButton>
+
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
