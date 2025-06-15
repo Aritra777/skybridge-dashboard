@@ -112,7 +112,7 @@ const VPCTable = () => {
     };
 
     // Status badge component
-    const StatusBadge = ({ status, type = 'status' }: { status: string }) => {
+    const StatusBadge = ({ status }: { status: string }) => {
         const getStatusStyles = () => {
             switch (status) {
                 case 'available':
@@ -263,7 +263,7 @@ const VPCTable = () => {
                                         {/* Expanded Row */}
                                         {expandedRows.has(vpc.VpcId) && (
                                             <tr className="bg-gray-50">
-                                                <td colSpan="8" className="px-6 py-4">
+                                                <td colSpan={8} className="px-6 py-4">
                                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                                         {/* DHCP Options */}
                                                         <div>

@@ -67,7 +67,7 @@ const ExpandedRow = ({ service }) => {
 
     return (
         <tr className="bg-gray-50">
-            <td colSpan="6" className="px-6 py-4">
+            <td colSpan={6} className="px-6 py-4">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     {/* Deployment Configuration */}
                     <div className="space-y-4">

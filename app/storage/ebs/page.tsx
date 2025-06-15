@@ -179,7 +179,7 @@ const ExpandableRow = ({ volume, isExpanded, onToggle }) => {
             </tr>
             {isExpanded && (
                 <tr className="bg-gray-50">
-                    <td colSpan="7" className="px-6 py-4">
+                    <td colSpan={7} className="px-6 py-4">
                         <div className="bg-white rounded-lg border border-gray-200 p-4">
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                                 <div className="space-y-3">
