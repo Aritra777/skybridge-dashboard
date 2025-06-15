@@ -44,7 +44,7 @@ export const sidebar_defination = {
             items: [
                 {
                     title: "Network",
-                    url: "#",
+                    url: "/network",
                 },
                 {
                     title: "Public",
@@ -53,6 +53,10 @@ export const sidebar_defination = {
                 {
                     title: "Private",
                     url: "#",
+                },
+                {
+                    title: "All",
+                    url: "/dashboard",
                 },
             ],
         },
@@ -68,6 +72,10 @@ export const sidebar_defination = {
                 {
                     title: "ECS",
                     url: "/compute/ecs",
+                },
+                {
+                    title: "All",
+                    url: "/compute",
                 },
             ],
         },
@@ -85,8 +93,8 @@ export const sidebar_defination = {
                     url: "/storage/ebs",
                 },
                 {
-                    title: "DynamoDB",
-                    url: "/storage/dynamodb",
+                    title: "All",
+                    url: "/storage",
                 },
             ],
         },
@@ -105,10 +113,6 @@ export const sidebar_defination = {
                 },
                 {
                     title: "Billing",
-                    url: "#",
-                },
-                {
-                    title: "Limits",
                     url: "#",
                 },
             ],
