@@ -44,20 +44,20 @@ export const sidebar_defination = {
             items: [
                 {
                     title: "Network",
-                    url: "/network",
+                    url: "/network/vpc",
                 },
-                {
-                    title: "Public",
-                    url: "#",
-                },
-                {
-                    title: "Private",
-                    url: "#",
-                },
-                {
-                    title: "All",
-                    url: "/dashboard",
-                },
+                // {
+                //     title: "Public",
+                //     url: "#",
+                // },
+                // {
+                //     title: "Private",
+                //     url: "#",
+                // },
+                // {
+                //     title: "All",
+                //     url: "/dashboard",
+                // },
             ],
         },
         {
