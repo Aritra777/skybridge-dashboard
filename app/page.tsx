@@ -41,6 +41,10 @@ const SkyBridgeLanding = () => {
     return () => clearTimeout(timer);
   }, []);
 
+  const handleStartFreeTrial = () => {
+    window.location.href = "/signup"; // Redirect to the signup page
+  }
+
   return (
     <div>
       {isLoading ? (
@@ -56,12 +60,12 @@ const SkyBridgeLanding = () => {
               {/* <div className="w-12 h-12 bg-gradient-to-br from-purple-600 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
                 <Cloud className="h-7 w-7 text-white" />
               </div> */}
-                            <Image
+                            {/* <Image
                 src={profile}
                 width={40}
                 height={40}
                 alt="Picture of the author"
-              />
+              /> */}
               <span className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
                 SkyBridge
               </span>
@@ -100,12 +104,13 @@ const SkyBridgeLanding = () => {
               <Link href="/login">
                 <Button
                   variant="ghost"
-                  className="text-gray-600 hover:text-gray-900 font-medium"
+                  className="text-gray-600 hover:text-gray-900 font-medium border border-gray-500 hover:border-gray-400 px-6 py-2.5 rounded-lg transition-colors cursor-pointer"
                 >
                   Sign In
                 </Button>
               </Link>
-              <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold px-6 py-2.5 rounded-lg shadow-lg hover:shadow-xl transition-all">
+              <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold px-6 py-2.5 rounded-lg shadow-lg hover:shadow-xl transition-all cursor-pointer"
+               onClick={handleStartFreeTrial}>
                 Start Free Trial
               </Button>
             </div>
@@ -140,6 +145,7 @@ const SkyBridgeLanding = () => {
               <Button
                 size="lg"
                 className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-10 py-4 text-lg font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all"
+                onClick={handleStartFreeTrial}
               >
                 Start Free Trial
                 <ArrowRight className="ml-2 h-5 w-5" />
@@ -148,6 +154,7 @@ const SkyBridgeLanding = () => {
                 variant="outline"
                 size="lg"
                 className="border-2 border-gray-300 text-gray-700 hover:bg-gray-50 px-10 py-4 text-lg font-semibold rounded-lg"
+                onClick={handleStartFreeTrial}
               >
                 Request a Demo
               </Button>
@@ -685,7 +692,8 @@ const SkyBridgeLanding = () => {
                 <h3 className="text-xl font-bold text-gray-900 mb-4 text-center">
                   Ready for a better solution?
                 </h3>
-                <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold px-6 py-2.5 rounded-lg shadow-lg hover:shadow-xl transition-all">
+                <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold px-6 py-2.5 rounded-lg shadow-lg hover:shadow-xl transition-all"
+                 onClick={handleStartFreeTrial}>
                   Discover SkyBridge
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
@@ -874,7 +882,7 @@ const SkyBridgeLanding = () => {
               </div>
               <div>
                 <Badge className="bg-green-100 text-green-700 mb-4">
-                  Intelligent Cost Optimization
+                  Cost Optimization
                 </Badge>
                 <h3 className="text-3xl font-bold text-gray-900 mb-6">
                   Save Smarter
@@ -1343,7 +1351,7 @@ const SkyBridgeLanding = () => {
                   2
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3 text-center">
-                  Intelligent Data Ingestion
+                  Data Ingestion
                 </h3>
                 <p className="text-gray-600 text-center">
                   SkyBridge automatically collects and normalizes vast amounts
@@ -1357,7 +1365,7 @@ const SkyBridgeLanding = () => {
                   3
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3 text-center">
-                  Intelligent Cloud Insights
+                  Cloud Insights
                 </h3>
                 <p className="text-gray-600 text-center">
                   Our models analyze your data, predict future costs,
@@ -1439,7 +1447,7 @@ const SkyBridgeLanding = () => {
                   <Brain className="w-7 h-7" />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-4">
-                  Intelligent & Proactive
+                  Smart & Proactive
                 </h3>
                 <p className="text-gray-600">
                   Moves beyond mere monitoring to deliver predictive analytics
@@ -1533,6 +1541,7 @@ const SkyBridgeLanding = () => {
             <Button
               size="lg"
               className="bg-white text-purple-600 hover:bg-gray-50 hover:scale-105 px-10 py-4 text-lg font-semibold rounded-lg shadow-xl transition-all duration-300"
+              onClick={handleStartFreeTrial}
             >
               Start Free Trial
               <ArrowRight className="ml-2 h-5 w-5" />
@@ -1540,7 +1549,8 @@ const SkyBridgeLanding = () => {
             <Button
               variant="outline"
               size="lg"
-              className="border-2 border-white text-white hover:bg-white/10 hover:scale-105 px-10 py-4 text-lg font-semibold rounded-lg transition-all duration-300"
+              className="border-2 border-white text-black hover:bg-white hover:scale-105 px-10 py-4 text-lg font-semibold rounded-lg transition-all duration-300"
+              onClick={handleStartFreeTrial}
             >
               Get Your Cloud Cost Analysis
             </Button>

@@ -61,11 +61,13 @@ export default function Component() {
       if (!Array.isArray(data)) throw new Error("Expected array from backend");
 
       // ✅ Recalculate totalCost from all resources (NOT just >0)
-      const updatedData = data.map((service) => {
-        const recalculatedTotal = service.resources.reduce((acc, r) => acc + r.cost, 0);
-        return { ...service, totalCost: recalculatedTotal };
-      });
+      // const updatedData = data.map((service) => {
+      //   const recalculatedTotal = service.resources.reduce((acc, r) => acc + r.cost, 0);
+      //   return { ...service, totalCost: recalculatedTotal };
+      // });
 
+      // setBillingData(updatedData);
+      const updatedData = data;
       setBillingData(updatedData);
 
       const calculatedTotalCost = updatedData.reduce((sum, s) => {
