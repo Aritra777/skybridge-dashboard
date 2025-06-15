@@ -19,7 +19,7 @@ export function RecommendationsDisplay({ recommendations, isLoading }: Recommend
                 <CardHeader>
                     <CardTitle className="text-gray-900 flex items-center gap-2">
                         <TrendingUp className="h-5 w-5" />
-                        AI Cost Analysis
+                        Cost Analysis
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -35,14 +35,14 @@ export function RecommendationsDisplay({ recommendations, isLoading }: Recommend
                 <CardHeader>
                     <CardTitle className="text-gray-900 flex items-center gap-2">
                         <TrendingUp className="h-5 w-5" />
-                        AI Cost Recommendations
+                        Cost Recommendations
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div className="text-center py-12">
                         <TrendingUp className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                        <h3 className="text-lg font-medium text-gray-700 mb-2">Ready for AI Analysis</h3>
-                        <p className="text-gray-500">Fill out the form to get AI-powered cloud cost recommendations</p>
+                        <h3 className="text-lg font-medium text-gray-700 mb-2">Ready for Analysis</h3>
+                        <p className="text-gray-500">Fill out the form to get cloud cost recommendations</p>
                     </div>
                 </CardContent>
             </Card>
@@ -61,7 +61,7 @@ export function RecommendationsDisplay({ recommendations, isLoading }: Recommend
                 <CardHeader>
                     <CardTitle className="text-gray-900 flex items-center gap-2">
                         <TrendingUp className="h-5 w-5" />
-                        AI-Powered Cost Analysis
+                        Cost Analysis
                     </CardTitle>
                     <p className="text-gray-600 text-sm">Based on your requirements</p>
                 </CardHeader>
@@ -98,7 +98,7 @@ export function RecommendationsDisplay({ recommendations, isLoading }: Recommend
                         <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
                             <div className="flex items-center gap-2 mb-2">
                                 <Award className="h-4 w-4 text-green-600" />
-                                <span className="text-green-700 font-medium">AI Recommendation</span>
+                                <span className="text-green-700 font-medium">Recommendation</span>
                             </div>
                             <p className="text-green-700 text-sm">{bestValue.cloud_provider} offers the best value</p>
                             <p className="text-green-600 text-sm">
@@ -116,7 +116,7 @@ export function RecommendationsDisplay({ recommendations, isLoading }: Recommend
 
             <Card className="bg-white border-gray-200 shadow-sm">
                 <CardHeader>
-                    <CardTitle className="text-gray-900">Detailed AI Analysis</CardTitle>
+                    <CardTitle className="text-gray-900">Detailed Analysis</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div className="space-y-6">
@@ -139,7 +139,7 @@ export function RecommendationsDisplay({ recommendations, isLoading }: Recommend
                                         <h3 className="text-gray-900 font-semibold">{rec.service_name}</h3>
                                         {index === 0 && (
                                             <Badge variant="outline" className="text-green-600 border-green-600 bg-green-50">
-                                                AI Best Choice
+                                                Best Choice
                                             </Badge>
                                         )}
                                     </div>
@@ -171,7 +171,7 @@ export function RecommendationsDisplay({ recommendations, isLoading }: Recommend
                                 </div>
 
                                 <div className="text-gray-700 text-sm bg-white p-3 rounded border border-gray-200">
-                                    <strong>AI Analysis:</strong> {rec.justification}
+                                    <strong>Analysis:</strong> {rec.justification}
                                 </div>
                             </div>
                         ))}
@@ -179,7 +179,7 @@ export function RecommendationsDisplay({ recommendations, isLoading }: Recommend
 
                     {recommendations.summary && (
                         <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                            <h4 className="text-gray-900 font-medium mb-2">AI Summary</h4>
+                            <h4 className="text-gray-900 font-medium mb-2">Summary</h4>
                             <p className="text-gray-700 text-sm">{recommendations.summary}</p>
                         </div>
                     )}

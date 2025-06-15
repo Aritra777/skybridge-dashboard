@@ -104,10 +104,6 @@ export const sidebar_defination = {
             icon: Settings2,
             items: [
                 {
-                    title: "General",
-                    url: "#",
-                },
-                {
                     title: "Team",
                     url: "#",
                 },
