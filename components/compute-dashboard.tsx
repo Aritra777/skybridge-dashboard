@@ -226,8 +226,8 @@ export default function ComputeDashboard() {
             </div>
 
             {/* Main Dashboard Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-               <Card className="lg:col-span-1">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 ">
+               <Card className="lg:col-span-2">
                   <CardHeader>
                      <CardTitle className="text-base">
                         Public vs Private Instances
@@ -289,7 +289,7 @@ export default function ComputeDashboard() {
                </Card>
 
                {/* Amazon EC2 Instance Families */}
-               <Card className="lg:col-span-2">
+               {/* <Card className="lg:col-span-2">
                   <CardHeader>
                      <CardTitle className="text-base">
                         Amazon EC2 Instance Families
@@ -300,10 +300,10 @@ export default function ComputeDashboard() {
                   </CardHeader>
                   <CardContent className="p-4">
                      <div className="w-full h-[250px] relative">
-                        {/* Custom simple graph visualization */}
+                        
                         <div className="w-full h-full flex items-center justify-center">
                            <div className="relative w-[200px] h-[200px]">
-                              {/* Concentric circles */}
+                             
                               {[0.25, 0.5, 0.75, 1].map((scale, i) => (
                                  <div
                                     key={i}
@@ -317,10 +317,10 @@ export default function ComputeDashboard() {
                                  />
                               ))}
 
-                              {/* Center point */}
+                              
                               <div className="absolute top-1/2 left-1/2 w-1 h-1 bg-gray-400 rounded-full transform -translate-x-1/2 -translate-y-1/2" />
 
-                              {/* Data points */}
+                              
                               {instanceFamilyData.map((item, index) => {
                                  const angle =
                                     (index * Math.PI * 2) /
@@ -348,7 +348,7 @@ export default function ComputeDashboard() {
                         </div>
                      </div>
 
-                     {/* Legend */}
+                     
                      <div className="grid grid-cols-4 gap-1 mt-4 text-xs">
                         {instanceFamilyData.map((item, index) => (
                            <div
@@ -369,7 +369,7 @@ export default function ComputeDashboard() {
                         ))}
                      </div>
                   </CardContent>
-               </Card>
+               </Card> */}
 
                {/* Instance Status Sidebar */}
                <Card className="lg:col-span-1">
@@ -418,6 +418,28 @@ export default function ComputeDashboard() {
                                  Detached Elastic IP
                               </p>
                               <p className="text-xl font-bold">4</p>
+                           </div>
+                        </div>
+                     </div>
+                     <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-2">
+                           <FileBox className="h-5 w-5 text-gray-500" />
+                           <div>
+                              <p className="text-xs text-gray-600">
+                                 Unattached Volumes
+                              </p>
+                              <p className="text-xl font-bold">2</p>
+                           </div>
+                        </div>
+                     </div>
+                     <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-2">
+                           <Database className="h-5 w-5 text-gray-500" />
+                           <div>
+                              <p className="text-xs text-gray-600">
+                                 Unattached Databases
+                              </p>
+                              <p className="text-xl font-bold">1</p>
                            </div>
                         </div>
                      </div>
