@@ -104,7 +104,7 @@ export const sidebar_defination = {
                 },
                 {
                     title: "Billing",
-                    url: "#",
+                    url: "/Billing",
                 },
                 {
                     title: "Limits",
