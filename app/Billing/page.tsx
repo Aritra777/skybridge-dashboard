@@ -375,5 +375,3 @@ function SummaryCard({
     </Card>
   );
 }
-const data: BillingService[] = await fetch_cost();
-console.log("Raw JSON from fetch_cost:", JSON.stringify(data, null, 2));
