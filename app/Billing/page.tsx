@@ -11,7 +11,7 @@ import {
   ChevronDown, ChevronUp, RefreshCw, AlertCircle
 } from 'lucide-react';
 import { fetch_cost } from "@/services/cost";
-
+import { BasicSidebarLayout } from '@/components/basic_sidebar_layout';
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#82CA9D', '#FFC658', '#FF7C7C'];
 
 const getServiceIcon = (serviceName) => {
@@ -206,6 +206,7 @@ const AWSCostDashboard = () => {
   }
 
   return (
+    <BasicSidebarLayout>
     <div className="min-h-screen bg-gray-100 p-6">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8 flex justify-between items-start">
@@ -302,6 +303,7 @@ const AWSCostDashboard = () => {
         </div>
       </div>
     </div>
+    </BasicSidebarLayout>
   );
 };
 

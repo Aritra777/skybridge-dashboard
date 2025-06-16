@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
     AudioWaveform,
     BookOpen,
@@ -43,16 +44,20 @@ export const sidebar_defination = {
             items: [
                 {
                     title: "Network",
-                    url: "#",
+                    url: "/network/vpc",
                 },
-                {
-                    title: "Public",
-                    url: "#",
-                },
-                {
-                    title: "Private",
-                    url: "#",
-                },
+                // {
+                //     title: "Public",
+                //     url: "#",
+                // },
+                // {
+                //     title: "Private",
+                //     url: "#",
+                // },
+                // {
+                //     title: "All",
+                //     url: "/dashboard",
+                // },
             ],
         },
         {
@@ -67,6 +72,10 @@ export const sidebar_defination = {
                 {
                     title: "ECS",
                     url: "/compute/ecs",
+                },
+                {
+                    title: "All",
+                    url: "/compute",
                 },
             ],
         },
@@ -84,8 +93,8 @@ export const sidebar_defination = {
                     url: "/storage/ebs",
                 },
                 {
-                    title: "DynamoDB",
-                    url: "/storage/dynamodb",
+                    title: "All",
+                    url: "/storage",
                 },
             ],
         },
@@ -95,20 +104,12 @@ export const sidebar_defination = {
             icon: Settings2,
             items: [
                 {
-                    title: "General",
-                    url: "#",
-                },
-                {
                     title: "Team",
                     url: "#",
                 },
                 {
                     title: "Billing",
                     url: "/Billing",
-                },
-                {
-                    title: "Limits",
-                    url: "#",
                 },
             ],
         },
@@ -123,11 +124,6 @@ export const sidebar_defination = {
             name: "Cost Calculator",
             url: "/cost-calculator",
             icon: Frame,
-        },
-        {
-            name: "Compare",
-            url: "#",
-            icon: Map,
         },
     ],
 }
