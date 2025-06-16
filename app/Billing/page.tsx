@@ -1,377 +1,308 @@
+// components/AWSCostDashboard.tsx
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState, useMemo, useEffect } from 'react';
 import {
-  AlertCircle,
-  ChevronDown,
-  ChevronRight,
-  DollarSign,
-  Globe,
-  Loader2,
-  Server,
-} from "lucide-react";
-
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/sui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/sui/table";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/sui/tabs";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+  PieChart, Pie, Cell
+} from 'recharts';
+import {
+  DollarSign, Server, Database, Shield, Globe,
+  ChevronDown, ChevronUp, RefreshCw, AlertCircle
+} from 'lucide-react';
 import { fetch_cost } from "@/services/cost";
-import { BasicSidebarLayout } from '@/components/basic_sidebar_layout';
-// Types
-type BillingResource = {
-  id: string;
-  region: string;
-  cost: number;
+
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#82CA9D', '#FFC658', '#FF7C7C'];
+
+const getServiceIcon = (serviceName) => {
+  if (serviceName.includes('EC2') || serviceName.includes('Compute')) return <Server className="w-5 h-5" />;
+  if (serviceName.includes('Storage') || serviceName.includes('S3')) return <Database className="w-5 h-5" />;
+  if (serviceName.includes('CloudWatch') || serviceName.includes('Management')) return <Shield className="w-5 h-5" />;
+  return <Globe className="w-5 h-5" />;
 };
 
-type BillingService = {
-  service: string;
-  totalCost: number;
-  resources: BillingResource[];
+const formatCurrency = (amount) => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 6
+  }).format(Math.abs(amount));
 };
 
-export default function Component() {
-  const [billingData, setBillingData] = useState<BillingService[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [expandedServices, setExpandedServices] = useState<string[]>([]);
-  const [totalCost, setTotalCost] = useState(0);
-  const [totalCredits, setTotalCredits] = useState(0);
-
-  useEffect(() => {
-  const getBillingData = async () => {
-    try {
-      setIsLoading(true);
-
-      const cachedData = localStorage.getItem("aws_billing_data");
-      if (cachedData) {
-        const parsedData = JSON.parse(cachedData);
-        setBillingData(parsedData.services);
-        setTotalCost(parsedData.totalCost);
-        setTotalCredits(parsedData.totalCredits);
-        setIsLoading(false);
-        return;
-      }
-
-      const data: BillingService[] = await fetch_cost();
-      console.log("Raw JSON from fetch_cost:", JSON.stringify(data, null, 2));
-
-      if (!Array.isArray(data)) throw new Error("Expected array from backend");
-
-      // ✅ Recalculate totalCost from all resources (NOT just >0)
-      const updatedData = data.map((service) => {
-        const recalculatedTotal = service.resources.reduce((acc, r) => acc + r.cost, 0);
-        return { ...service, totalCost: recalculatedTotal };
-      });
-
-      setBillingData(updatedData);
-
-      const calculatedTotalCost = updatedData.reduce((sum, s) => {
-        return sum + s.totalCost;
-      }, 0);
-      setTotalCost(calculatedTotalCost);
-
-      const calculatedTotalCredits = updatedData.reduce((sum, s) => {
-        return (
-          sum +
-          s.resources
-            .filter((r) => r.cost < 0)
-            .reduce((acc, r) => acc + Math.abs(r.cost), 0)
-        );
-      }, 0);
-      setTotalCredits(calculatedTotalCredits);
-
-      localStorage.setItem(
-        "aws_billing_data",
-        JSON.stringify({
-          services: updatedData,
-          totalCost: calculatedTotalCost,
-          totalCredits: calculatedTotalCredits,
-        })
-      );
-    } catch (err: any) {
-      console.error("Error fetching billing data:", err);
-      setError("Failed to load billing data. " + err.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  getBillingData();
-}, []);
-
-  const toggleService = (service: string) => {
-    setExpandedServices((prev) =>
-      prev.includes(service) ? prev.filter((s) => s !== service) : [...prev, service]
-    );
-  };
-
-  const formatCurrency = (amount: number) =>
-    new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 6,
-    }).format(amount);
-
-  const getServiceIcon = (service: string) => {
-    if (service.includes("Storage") || service.includes("Compute"))
-      return <Server className="h-4 w-4" />;
-    if (service.includes("Network") || service.includes("VPC"))
-      return <Globe className="h-4 w-4" />;
-    return <DollarSign className="h-4 w-4" />;
-  };
-
-  const regionStats = billingData.reduce((acc, service) => {
-    service.resources.forEach((res) => {
-      if (!acc[res.region]) acc[res.region] = { cost: 0, resources: 0 };
-      acc[res.region].cost += res.cost;
-      acc[res.region].resources += 1;
-    });
-    return acc;
-  }, {} as Record<string, { cost: number; resources: number }>);
+const ServiceCard = ({ service, isExpanded, onToggle }) => {
+  const positiveResources = service.resources.filter(r => r.cost > 0);
+  const negativeResources = service.resources.filter(r => r.cost < 0);
 
   return (
-    <BasicSidebarLayout>
-    <div className="min-h-screen bg-gray-50 p-4 md:p-6 lg:p-8">
-      {isLoading ? (
-        <div className="flex items-center justify-center min-h-[300px]">
-          <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+    <div className="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
+      <div className="p-4 cursor-pointer hover:bg-gray-50 transition-colors" onClick={onToggle}>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <div className="text-blue-600">{getServiceIcon(service.service)}</div>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900">{service.service}</h3>
+              <p className="text-sm text-gray-600">{service.resources.length} resources</p>
+            </div>
+          </div>
+          <div className="flex items-center space-x-3">
+            <div className="text-right">
+              <div className={`text-xl font-bold ${service.totalCost >= 0 ? 'text-red-600' : 'text-green-600'}`}>
+                {service.totalCost >= 0 ? '' : '-'}{formatCurrency(service.totalCost)}
+              </div>
+            </div>
+            {isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+          </div>
         </div>
-      ) : error ? (
-        <Alert variant="destructive" className="mt-4">
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-      ) : (
-        <div className="mx-auto max-w-7xl space-y-6">
-          <div className="space-y-2">
-            <h1 className="text-3xl font-bold">AWS Billing Dashboard</h1>
-            <p className="text-muted-foreground">
-              Monitor your AWS costs and resource usage across services and
-              regions.
-            </p>
-          </div>
+      </div>
 
-          {/* Summary Cards */}
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <SummaryCard title="Total Cost" value={formatCurrency(totalCost)} />
-            <SummaryCard
-              title="Credits Applied"
-              value={formatCurrency(totalCredits)}
-              highlight
-            />
-            <SummaryCard
-              title="Active Services"
-              value={billingData.length.toString()}
-            />
-            <SummaryCard
-              title="Regions"
-              value={Object.keys(regionStats).length.toString()}
-            />
-          </div>
-
-          <Tabs defaultValue="services">
-            <TabsList>
-              <TabsTrigger value="services">Services</TabsTrigger>
-              <TabsTrigger value="regions">Regions</TabsTrigger>
-              <TabsTrigger value="resources">Resources</TabsTrigger>
-            </TabsList>
-
-            {/* Services Tab */}
-            <TabsContent value="services">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Service Breakdown</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {billingData
-                    .sort((a, b) => b.totalCost - a.totalCost)
-                    .map((service) => (
-                      <div key={service.service}>
-                        <div
-                          className="flex justify-between items-center border p-3 rounded cursor-pointer hover:bg-accent/50"
-                          onClick={() => toggleService(service.service)}
-                        >
-                          <div className="flex items-center space-x-3">
-                            {getServiceIcon(service.service)}
-                            <div>
-                              <p className="font-medium">{service.service}</p>
-                              <p className="text-sm text-muted-foreground">
-                                {service.resources.length} resources
-                              </p>
-                            </div>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <span>{formatCurrency(service.totalCost)}</span>
-                            {expandedServices.includes(service.service) ? (
-                              <ChevronDown className="h-4 w-4" />
-                            ) : (
-                              <ChevronRight className="h-4 w-4" />
-                            )}
-                          </div>
+      {isExpanded && (
+        <div className="border-t border-gray-200 p-4 bg-gray-50">
+          <div className="space-y-3">
+            {positiveResources.length > 0 && (
+              <div>
+                <h4 className="font-medium text-gray-900 mb-2">Active Resources</h4>
+                <div className="space-y-2">
+                  {positiveResources.map((resource, idx) => (
+                    <div key={idx} className="flex justify-between items-center p-2 bg-white rounded border">
+                      <div>
+                        <div className="font-mono text-sm text-gray-800">
+                          {resource.id === 'NoResourceId' ? 'Unspecified Resource' : resource.id}
                         </div>
-
-                        {expandedServices.includes(service.service) && (
-                          <div className="ml-6">
-                            <Table>
-                              <TableHeader>
-                                <TableRow>
-                                  <TableHead>Resource ID</TableHead>
-                                  <TableHead>Region</TableHead>
-                                  <TableHead className="text-right">
-                                    Cost
-                                  </TableHead>
-                                </TableRow>
-                              </TableHeader>
-                              <TableBody>
-                                {service.resources.map((r, i) => (
-                                  <TableRow key={i}>
-                                    <TableCell className="font-mono text-sm">
-                                      {r.id === "NoResourceId"
-                                        ? "N/A"
-                                        : r.id.length > 50
-                                        ? r.id.slice(0, 50) + "..."
-                                        : r.id}
-                                    </TableCell>
-                                    <TableCell>
-                                      <Badge variant="outline">{r.region}</Badge>
-                                    </TableCell>
-                                    <TableCell className="text-right">
-                                      <span
-                                        className={r.cost < 0 ? "text-green-600" : ""}
-                                      >
-                                        {formatCurrency(r.cost)}
-                                      </span>
-                                    </TableCell>
-                                  </TableRow>
-                                ))}
-                              </TableBody>
-                            </Table>
-                          </div>
-                        )}
+                        <div className="text-xs text-gray-500">{resource.region}</div>
                       </div>
-                    ))}
-                </CardContent>
-              </Card>
-            </TabsContent>
+                      <div className="text-red-600 font-medium">{formatCurrency(resource.cost)}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
-            {/* Regions Tab */}
-            <TabsContent value="regions">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Regional Breakdown</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Region</TableHead>
-                        <TableHead className="text-right">Resources</TableHead>
-                        <TableHead className="text-right">Cost</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {Object.entries(regionStats)
-                        .sort(([, a], [, b]) => b.cost - a.cost)
-                        .map(([region, stats]) => (
-                          <TableRow key={region}>
-                            <TableCell>{region}</TableCell>
-                            <TableCell className="text-right">
-                              {stats.resources}
-                            </TableCell>
-                            <TableCell className="text-right">
-                              <span className={stats.cost < 0 ? "text-green-600" : ""}>
-                                {formatCurrency(stats.cost)}
-                              </span>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                    </TableBody>
-                  </Table>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            {/* All Resources Tab */}
-            <TabsContent value="resources">
-              <Card>
-                <CardHeader>
-                  <CardTitle>All Resources</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Service</TableHead>
-                        <TableHead>Resource ID</TableHead>
-                        <TableHead>Region</TableHead>
-                        <TableHead className="text-right">Cost</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {billingData
-                        .flatMap((s) =>
-                          s.resources.map((r) => ({ ...r, service: s.service }))
-                        )
-                        .sort((a, b) => Math.abs(b.cost) - Math.abs(a.cost))
-                        .map((res, idx) => (
-                          <TableRow key={idx}>
-                            <TableCell>{res.service}</TableCell>
-                            <TableCell className="font-mono text-sm">
-                              {res.id === "NoResourceId"
-                                ? "N/A"
-                                : res.id.length > 40
-                                ? res.id.slice(0, 40) + "..."
-                                : res.id}
-                            </TableCell>
-                            <TableCell>
-                              <Badge variant="outline">{res.region}</Badge>
-                            </TableCell>
-                            <TableCell className="text-right">
-                              <span className={res.cost < 0 ? "text-green-600" : ""}>
-                                {formatCurrency(res.cost)}
-                              </span>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                    </TableBody>
-                  </Table>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
+            {negativeResources.length > 0 && (
+              <div>
+                <h4 className="font-medium text-gray-900 mb-2">Credits/Refunds</h4>
+                <div className="space-y-2">
+                  {negativeResources.map((resource, idx) => (
+                    <div key={idx} className="flex justify-between items-center p-2 bg-green-50 rounded border border-green-200">
+                      <div>
+                        <div className="font-mono text-sm text-gray-800">
+                          {resource.id === 'NoResourceId' ? 'Unspecified Resource' : resource.id}
+                        </div>
+                        <div className="text-xs text-gray-500">{resource.region}</div>
+                      </div>
+                      <div className="text-green-600 font-medium">-{formatCurrency(resource.cost)}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>
-    </BasicSidebarLayout>
   );
-}
+};
 
-// Summary Card Component
-function SummaryCard({
-  title,
-  value,
-  highlight = false,
-}: {
-  title: string;
-  value: string;
-  highlight?: boolean;
-}) {
-  return (
-    <Card>
-      <CardHeader className="flex justify-between items-center">
-        <CardTitle className="text-sm font-medium">{title}</CardTitle>
-        <DollarSign className="h-4 w-4 text-muted-foreground" />
-      </CardHeader>
-      <CardContent>
-        <div className={`text-2xl font-bold ${highlight ? "text-green-600" : ""}`}>
-          {value}
+const AWSCostDashboard = () => {
+  const [expandedServices, setExpandedServices] = useState({});
+  const [costData, setCostData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [lastUpdated, setLastUpdated] = useState(null);
+
+  useEffect(() => {
+    loadCostData();
+  }, []);
+
+  const loadCostData = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await fetch_cost();
+
+      if (data && Array.isArray(data)) {
+        setCostData(data);
+        setLastUpdated(new Date());
+      } else {
+        throw new Error('Invalid data format received');
+      }
+    } catch (err) {
+      console.error('Error fetching cost data:', err);
+      setError(err.message || 'Failed to fetch cost data');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRefresh = () => {
+    loadCostData();
+  };
+
+  const toggleService = (index) => {
+    setExpandedServices(prev => ({ ...prev, [index]: !prev[index] }));
+  };
+
+  const summary = useMemo(() => {
+    const totalCost = costData.reduce((sum, service) => sum + service.totalCost, 0);
+    const totalResources = costData.reduce((sum, service) => sum + service.resources.length, 0);
+    const activeServices = costData.filter(service => service.totalCost > 0).length;
+    const regions = new Set();
+    costData.forEach(service => {
+      service.resources.forEach(resource => regions.add(resource.region));
+    });
+    return { totalCost, totalResources, activeServices, regionCount: regions.size };
+  }, [costData]);
+
+  const chartData = useMemo(() => {
+    return costData
+      .filter(service => service.totalCost > 0)
+      .map(service => ({
+        name: service.service.replace('Amazon ', '').replace('AWS ', ''),
+        cost: service.totalCost,
+        fullName: service.service
+      }))
+      .sort((a, b) => b.cost - a.cost);
+  }, [costData]);
+
+  const regionData = useMemo(() => {
+    const regionCosts = {};
+    costData.forEach(service => {
+      service.resources.forEach(resource => {
+        if (resource.cost > 0) {
+          regionCosts[resource.region] = (regionCosts[resource.region] || 0) + resource.cost;
+        }
+      });
+    });
+    return Object.entries(regionCosts)
+      .map(([region, cost]) => ({ region, cost }))
+      .sort((a, b) => b.cost - a.cost);
+  }, [costData]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <RefreshCw className="w-8 h-8 animate-spin text-blue-600 mx-auto mb-4" />
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">Loading AWS Cost Data</h2>
+          <p className="text-gray-600">Fetching your latest cost information...</p>
         </div>
-        <p className="text-xs text-muted-foreground">Current period</p>
-      </CardContent>
-    </Card>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="text-center max-w-md">
+          <AlertCircle className="w-12 h-12 text-red-600 mx-auto mb-4" />
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">Error Loading Data</h2>
+          <p className="text-gray-600 mb-4">{error}</p>
+          <button onClick={handleRefresh} className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center mx-auto">
+            <RefreshCw className="w-4 h-4 mr-2" /> Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-100 p-6">
+      <div className="max-w-7xl mx-auto">
+        <div className="mb-8 flex justify-between items-start">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">AWS Cost Dashboard</h1>
+            <p className="text-gray-600">Monitor and analyze your AWS service costs</p>
+            {lastUpdated && <p className="text-sm text-gray-500 mt-1">Last updated: {lastUpdated.toLocaleString()}</p>}
+          </div>
+          <button onClick={handleRefresh} disabled={loading} className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center disabled:opacity-50 disabled:cursor-not-allowed">
+            <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} /> Refresh
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <div className="flex items-center">
+              <div className="p-3 rounded-full bg-blue-100 text-blue-600"><DollarSign className="w-6 h-6" /></div>
+              <div className="ml-4">
+                <h3 className="text-sm font-medium text-gray-500">Total Cost</h3>
+                <p className="text-2xl font-bold text-gray-900">{formatCurrency(summary.totalCost)}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <div className="flex items-center">
+              <div className="p-3 rounded-full bg-green-100 text-green-600"><Server className="w-6 h-6" /></div>
+              <div className="ml-4">
+                <h3 className="text-sm font-medium text-gray-500">Active Services</h3>
+                <p className="text-2xl font-bold text-gray-900">{summary.activeServices}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <div className="flex items-center">
+              <div className="p-3 rounded-full bg-purple-100 text-purple-600"><Database className="w-6 h-6" /></div>
+              <div className="ml-4">
+                <h3 className="text-sm font-medium text-gray-500">Total Resources</h3>
+                <p className="text-2xl font-bold text-gray-900">{summary.totalResources}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* New Info Boxes */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+          <div className="bg-white rounded-lg shadow p-4 text-center">
+            <h3 className="text-sm font-medium text-gray-500">Services</h3>
+            <p className="text-xl font-bold text-gray-900">{costData.length}</p>
+          </div>
+          <div className="bg-white rounded-lg shadow p-4 text-center">
+            <h3 className="text-sm font-medium text-gray-500">Regions</h3>
+            <p className="text-xl font-bold text-gray-900">{summary.regionCount}</p>
+          </div>
+          <div className="bg-white rounded-lg shadow p-4 text-center">
+            <h3 className="text-sm font-medium text-gray-500">Resources</h3>
+            <p className="text-xl font-bold text-gray-900">{summary.totalResources}</p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Cost by Service</h3>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={chartData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" angle={-45} textAnchor="end" height={80} fontSize={12} />
+                <YAxis />
+                <Tooltip formatter={(value) => [formatCurrency(value), 'Cost']} labelFormatter={(label) => chartData.find(d => d.name === label)?.fullName || label} />
+                <Bar dataKey="cost" fill="#0088FE" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Cost by Region</h3>
+            <ResponsiveContainer width="100%" height={300}>
+              <PieChart>
+                <Pie data={regionData} cx="50%" cy="50%" labelLine={false} label={({ region, cost }) => `${region}: ${formatCurrency(cost)}`} outerRadius={80} fill="#8884d8" dataKey="cost">
+                  {regionData.map((entry, index) => <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />)}
+                </Pie>
+                <Tooltip formatter={(value) => formatCurrency(value)} />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          <h2 className="text-2xl font-bold text-gray-900">Service Details</h2>
+          {costData.map((service, index) => (
+            <ServiceCard key={index} service={service} isExpanded={expandedServices[index]} onToggle={() => toggleService(index)} />
+          ))}
+        </div>
+      </div>
+    </div>
   );
-}
+};
+
+export default AWSCostDashboard;
